@@ -1,0 +1,7 @@
+coverage_service: cobertura_xml
+xcodeproj: ./Meteo.xcodeproj
+scheme: Meteo
+build_directory: ./DerivedData/
+source_directory: Meteo
+output_directory: ./CodeCoverage/
+binary_basename: Meteo
