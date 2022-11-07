@@ -1,4 +1,3 @@
-//
 //  SearchTabViewController.swift
 //  Meteo
 //
@@ -8,20 +7,28 @@
 import UIKit
 
 final class SearchTabViewController: UIViewController {
-  //  override func loadView() {
-  //    super.loadView()
-  //    view = UIView(frame: UIScreen.main.bounds)
-  //  }
 
+  private func setupView() {
+    view.backgroundColor = .systemBackground
+  }
+  
+  
+  private lazy var searchResultViewController = SearchResultTableViewController()
+  
+  private lazy var searchController = UISearchController(searchResultsController: searchResultViewController)
+
+  
+  private func setupSearchController() {
+    navigationItem.searchController = searchController
+    searchController.searchResultsUpdater = searchResultViewController
+    searchController.searchBar.placeholder = "Search for a city or airport"
+    searchController.obscuresBackgroundDuringPresentation = true
+    definesPresentationContext = true
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .systemBackground
-
-    let textField = UITextField()
-    textField.text = "Search"
-    textField.translatesAutoresizingMaskIntoConstraints = false
-    view.addSubview(textField)
-    textField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-    textField.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    setupView()
+    setupSearchController()
   }
 }

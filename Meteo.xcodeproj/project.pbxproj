@@ -28,6 +28,9 @@
 		BBDCDCA8291845ED00CAB740 /* LocationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBDCDCA7291845ED00CAB740 /* LocationAPI.swift */; };
 		BBDCDCAA29184A3900CAB740 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBDCDCA929184A3900CAB740 /* Location.swift */; };
 		BBDCDCAC2918587400CAB740 /* WeatherWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBDCDCAB2918587400CAB740 /* WeatherWrapper.swift */; };
+		BBF8098E2918B3D900890A89 /* SearchResultTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF8098D2918B3D900890A89 /* SearchResultTableViewController.swift */; };
+		BBF809902918B3FD00890A89 /* FavoritesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF8098F2918B3FD00890A89 /* FavoritesCollectionViewController.swift */; };
+		BBF809922918B40D00890A89 /* FavoriteTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF809912918B40D00890A89 /* FavoriteTileView.swift */; };
 		BBFC12F829172BBE00955ABE /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBFC12F729172BBE00955ABE /* UserSettings.swift */; };
 		BBFC12FA29172BC700955ABE /* Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBFC12F929172BC700955ABE /* Favorite.swift */; };
 		BBFC1308291730AF00955ABE /* OpenWeather in Frameworks */ = {isa = PBXBuildFile; productRef = BBFC1307291730AF00955ABE /* OpenWeather */; };
@@ -88,6 +91,9 @@
 		BBDCDCA7291845ED00CAB740 /* LocationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAPI.swift; sourceTree = "<group>"; };
 		BBDCDCA929184A3900CAB740 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		BBDCDCAB2918587400CAB740 /* WeatherWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWrapper.swift; sourceTree = "<group>"; };
+		BBF8098D2918B3D900890A89 /* SearchResultTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTableViewController.swift; sourceTree = "<group>"; };
+		BBF8098F2918B3FD00890A89 /* FavoritesCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesCollectionViewController.swift; sourceTree = "<group>"; };
+		BBF809912918B40D00890A89 /* FavoriteTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTileView.swift; sourceTree = "<group>"; };
 		BBFC12F729172BBE00955ABE /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		BBFC12F929172BC700955ABE /* Favorite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favorite.swift; sourceTree = "<group>"; };
 		BBFC130B291732FA00955ABE /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
@@ -230,6 +236,8 @@
 		BBFC12FD29172D0C00955ABE /* Favorites */ = {
 			isa = PBXGroup;
 			children = (
+				BBF8098F2918B3FD00890A89 /* FavoritesCollectionViewController.swift */,
+				BBF809912918B40D00890A89 /* FavoriteTileView.swift */,
 			);
 			path = Favorites;
 			sourceTree = "<group>";
@@ -237,6 +245,7 @@
 		BBFC12FE29172D1300955ABE /* Search Result */ = {
 			isa = PBXGroup;
 			children = (
+				BBF8098D2918B3D900890A89 /* SearchResultTableViewController.swift */,
 			);
 			path = "Search Result";
 			sourceTree = "<group>";
@@ -505,6 +514,7 @@
 			files = (
 				BB05468629171D5900B1C64E /* AppDelegate.swift in Sources */,
 				BB32EFF2291809E3005157CB /* WeatherSummary.swift in Sources */,
+				BBF809902918B3FD00890A89 /* FavoritesCollectionViewController.swift in Sources */,
 				BBFC13102917393300955ABE /* RootViewController.swift in Sources */,
 				BBFC13562917536800955ABE /* UIViewExt.swift in Sources */,
 				BB32EFF429180B61005157CB /* WeatherSummary+OpenWeather.swift in Sources */,
@@ -517,6 +527,7 @@
 				BBFC130E291736AD00955ABE /* FavoritesStore.swift in Sources */,
 				BBFC135C29176F5600955ABE /* WeatherContainerViewController.swift in Sources */,
 				BB1EFC462918A10800F68C7F /* SwiftUI+ShapeStyle.swift in Sources */,
+				BBF8098E2918B3D900890A89 /* SearchResultTableViewController.swift in Sources */,
 				BBDCDCAA29184A3900CAB740 /* Location.swift in Sources */,
 				BBFC131229173A3800955ABE /* WeatherTabViewController.swift in Sources */,
 				BB32EFEE2917829B005157CB /* WeatherContainerViewModel.swift in Sources */,
@@ -527,6 +538,7 @@
 				BB05468829171D5900B1C64E /* SceneDelegate.swift in Sources */,
 				BBFC131429173BDD00955ABE /* SearchTabViewController.swift in Sources */,
 				BB32EFFD29181D4F005157CB /* ForecastCollectionViewController.swift in Sources */,
+				BBF809922918B40D00890A89 /* FavoriteTileView.swift in Sources */,
 				BB32EFF829181ACD005157CB /* WeatherForecast+OpenWeather.swift in Sources */,
 				BBFC13602917765200955ABE /* WeatherLowAndHighView.swift in Sources */,
 				BB32EFF029178379005157CB /* WeatherSummaryView.swift in Sources */,

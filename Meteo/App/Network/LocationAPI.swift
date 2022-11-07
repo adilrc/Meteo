@@ -62,21 +62,23 @@ final class LocationAPI: NSObject, LocationProviding {
 
     let request = MKLocalSearch.Request()
     request.naturalLanguageQuery = input
+    request.region = MKCoordinateRegion(.world)
     let search = MKLocalSearch(request: request)
 
     return try await search.start().mapItems
   }
 
   func search(_ input: String) async throws -> [Location] {
-    try await searchMapItems(input)
-      .compactMap { mapItem -> Location? in
-        guard let locality = mapItem.placemark.locality else { return nil }
-        return .init(
-          locality: locality,
-          latitude: mapItem.placemark.coordinate.latitude,
-          longitude: mapItem.placemark.coordinate.longitude)
-
-      }
+    var uniqueLocations: [Location] = []
+    for mapItem in try await searchMapItems(input) {
+      guard let locality = mapItem.placemark.locality, !uniqueLocations.contains(where: { $0.locality == locality }) else { continue }
+      uniqueLocations.append(.init(
+        locality: locality,
+        latitude: mapItem.placemark.coordinate.latitude,
+        longitude: mapItem.placemark.coordinate.longitude))
+    }
+    
+    return uniqueLocations
   }
 
   func isCurrentLocation(_ location: Location) async throws -> Bool {
