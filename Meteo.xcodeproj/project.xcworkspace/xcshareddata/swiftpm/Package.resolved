@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "git@github.com:friendlycashew/openweather-swift-sdk.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "28bda2ccea9e71b5ce3b794249a3c7482f8fce2c"
+        "revision" : "a11a0c023b0442e29e0ddffd361610d2f07cb8dc",
+        "version" : "0.3.3"
       }
     }
   ],

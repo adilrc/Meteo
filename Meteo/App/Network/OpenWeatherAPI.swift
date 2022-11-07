@@ -11,6 +11,7 @@ import OpenWeather
 protocol OpenWeatherAPIWeatherProviding {
   func weatherSummary(for location: Location) async throws -> WeatherSummary
   func forecast(for location: Location) async throws -> WeatherForecast
+  func search(_ input: String) async throws -> Set<Location>
 }
 
 final actor OpenWeatherAPI: OpenWeatherAPIWeatherProviding {
@@ -35,5 +36,9 @@ final actor OpenWeatherAPI: OpenWeatherAPIWeatherProviding {
       coordinates: .init(latitude: latitude, longitude: longitude))
 
     return WeatherForecast.make(from: response)
+  }
+  
+  func search(_ input: String) async throws -> Set<Location> {
+    return try await Set(openWeather.directGeocoding(input).map(Location.make(from:)))
   }
 }

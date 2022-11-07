@@ -17,12 +17,12 @@ extension WeatherForecast {
         calendar.timeZone = response.city.timeZone ?? .current
     
         // 1. Remove today's forecasts
-        var isNotToday: Bool = !calendar.isDateInToday($0.date)
+        let isNotToday: Bool = !calendar.isDateInToday($0.date)
         
         // 2. Use only values between 10 a.m. and 13 p.m.
         // Assuming the API is correct, there should only be one value per day in this range.
         let range = 10..<13
-        var isMidDay: Bool = range.contains(calendar.component(.hour, from: $0.date))
+        let isMidDay: Bool = range.contains(calendar.component(.hour, from: $0.date))
         
         return isNotToday && isMidDay
       }

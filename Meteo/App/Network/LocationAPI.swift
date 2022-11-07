@@ -8,11 +8,10 @@
 import Combine
 import CoreLocation
 import Foundation
-import MapKit
+import OpenWeather
 
 protocol LocationProviding {
   func userLocation() async throws -> Location?
-  func search(_ input: String) async throws -> [Location]
   func isCurrentLocation(_ location: Location) async throws -> Bool
 }
 
@@ -55,30 +54,6 @@ final class LocationAPI: NSObject, LocationProviding {
         locality: locality,
         latitude: currentLocation.coordinate.latitude,
         longitude: currentLocation.coordinate.longitude))
-  }
-
-  private func searchMapItems(_ input: String) async throws -> [MKMapItem] {
-    logger.info("􀊫 Starting a search request for '\(input)'...")
-
-    let request = MKLocalSearch.Request()
-    request.naturalLanguageQuery = input
-    request.region = MKCoordinateRegion(.world)
-    let search = MKLocalSearch(request: request)
-
-    return try await search.start().mapItems
-  }
-
-  func search(_ input: String) async throws -> [Location] {
-    var uniqueLocations: [Location] = []
-    for mapItem in try await searchMapItems(input) {
-      guard let locality = mapItem.placemark.locality, !uniqueLocations.contains(where: { $0.locality == locality }) else { continue }
-      uniqueLocations.append(.init(
-        locality: locality,
-        latitude: mapItem.placemark.coordinate.latitude,
-        longitude: mapItem.placemark.coordinate.longitude))
-    }
-    
-    return uniqueLocations
   }
 
   func isCurrentLocation(_ location: Location) async throws -> Bool {

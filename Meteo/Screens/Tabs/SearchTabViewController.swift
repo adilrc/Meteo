@@ -12,15 +12,14 @@ final class SearchTabViewController: UIViewController {
     view.backgroundColor = .systemBackground
   }
   
-  
   private lazy var searchResultViewController = SearchResultTableViewController()
   
-  private lazy var searchController = UISearchController(searchResultsController: searchResultViewController)
+  lazy var searchController = UISearchController(searchResultsController: searchResultViewController)
 
   
   private func setupSearchController() {
     navigationItem.searchController = searchController
-    searchController.searchResultsUpdater = searchResultViewController
+    addChild(searchResultViewController)
     searchController.searchBar.placeholder = "Search for a city or airport"
     searchController.obscuresBackgroundDuringPresentation = true
     definesPresentationContext = true

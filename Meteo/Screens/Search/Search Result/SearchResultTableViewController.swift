@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SwiftUI
+import Combine
 
 private let searchResultCellReuseIdentifier = "SearchResultCell"
 
@@ -14,38 +14,53 @@ final class SearchResultTableViewController: UITableViewController {
 
   private lazy var dataSource: UITableViewDiffableDataSource<Int, Location> = .init(tableView: tableView) { tableView, indexPath, itemIdentifier in
     let cell = tableView.dequeueReusableCell(withIdentifier: searchResultCellReuseIdentifier)
-    
-    cell?.textLabel?.text = itemIdentifier.locality
-
+    cell?.textLabel?.text = itemIdentifier.description
     return cell
   }
   
-  fileprivate var searchTask: Task<Void, Error>?
+  private var subscriptions = Set<AnyCancellable>()
   
   private func registerCells() {
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: searchResultCellReuseIdentifier)
   }
   
+  private var emptySnapshot: NSDiffableDataSourceSnapshot<Int, Location> {
+    var snapshot = NSDiffableDataSourceSnapshot<Int, Location>()
+    snapshot.appendSections([0])
+    snapshot.appendItems([])
+    return snapshot
+  }
+  
+  private func listenSearchBarChange() {
+    NotificationCenter.default.publisher(for: UISearchTextField.textDidChangeNotification, object: (parent as? SearchTabViewController)?.searchController.searchBar.searchTextField)
+      .compactMap { notification -> String? in
+        (notification.object as? UISearchTextField)?.text
+      }
+      .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+      .sink { [weak self] value in
+        guard let self = self else { return }
+        Task { @MainActor in
+          guard !value.isEmpty else {
+            await self.dataSource.apply(self.emptySnapshot)
+            return
+          }
+          
+          let locations: Set<Location> = try await OpenWeatherAPI.shared.search(value)
+          
+          logger.info("􀊫 Found \(locations.count) locations.")
+          
+          var snapshot = NSDiffableDataSourceSnapshot<Int, Location>()
+          snapshot.appendSections([0])
+          snapshot.appendItems(locations.sorted())
+          await self.dataSource.apply(snapshot)
+        }
+      }
+      .store(in: &subscriptions)
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    
     registerCells()
-  }
-}
-
-extension SearchResultTableViewController: UISearchResultsUpdating {
-  func updateSearchResults(for searchController: UISearchController) {
-    guard let input = searchController.searchBar.text, !input.isEmpty else { return }
-  
-    searchTask = Task { @MainActor in
-      let locations = try await LocationAPI.shared.search(input)
-      
-      logger.info("􀊫 Found \(locations.count) locations.")
-      
-      var snapshot = NSDiffableDataSourceSnapshot<Int, Location>()
-      snapshot.appendSections([0])
-      snapshot.appendItems(locations)
-      await dataSource.apply(snapshot)
-    }
+    listenSearchBarChange()
   }
 }
