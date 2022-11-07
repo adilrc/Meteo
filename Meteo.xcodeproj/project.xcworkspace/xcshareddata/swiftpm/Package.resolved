@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "openweather-swift-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:friendlycashew/openweather-swift-sdk.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "28bda2ccea9e71b5ce3b794249a3c7482f8fce2c"
+      }
+    }
+  ],
+  "version" : 2
+}
