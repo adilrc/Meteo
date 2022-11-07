@@ -11,12 +11,12 @@ final class SearchTabViewController: UIViewController {
   private func setupView() {
     view.backgroundColor = .systemBackground
   }
-  
-  private lazy var searchResultViewController = SearchResultTableViewController()
-  
-  lazy var searchController = UISearchController(searchResultsController: searchResultViewController)
 
-  
+  private lazy var searchResultViewController = SearchResultTableViewController()
+
+  lazy var searchController = UISearchController(
+    searchResultsController: searchResultViewController)
+
   private func setupSearchController() {
     navigationItem.searchController = searchController
     addChild(searchResultViewController)
@@ -24,7 +24,7 @@ final class SearchTabViewController: UIViewController {
     searchController.obscuresBackgroundDuringPresentation = true
     definesPresentationContext = true
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupView()

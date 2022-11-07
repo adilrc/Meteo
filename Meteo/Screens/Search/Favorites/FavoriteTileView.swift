@@ -8,15 +8,18 @@
 import SwiftUI
 
 struct FavoriteTileView: View {
-  
+
   private var isCurrentLocation: Bool
   private var locality: String
   private var dateStringAtLocation: String
   private var weatherIconSystemName: String
   private var description: String
   private var temperature: Measurement<UnitTemperature>
-  
-  init(isCurrentLocation: Bool, locality: String, dateStringAtLocation: String, weatherIconSystemName: String, description: String, temperature: Measurement<UnitTemperature>) {
+
+  init(
+    isCurrentLocation: Bool, locality: String, dateStringAtLocation: String,
+    weatherIconSystemName: String, description: String, temperature: Measurement<UnitTemperature>
+  ) {
     self.isCurrentLocation = isCurrentLocation
     self.locality = locality
     self.dateStringAtLocation = dateStringAtLocation
@@ -24,7 +27,7 @@ struct FavoriteTileView: View {
     self.description = description
     self.temperature = temperature
   }
-  
+
   private static let dateFormatter: DateFormatter = {
     let dateFormatter = DateFormatter()
     dateFormatter.setLocalizedDateFormatFromTemplate("E")
@@ -39,7 +42,9 @@ struct FavoriteTileView: View {
           .aspectRatio(contentMode: .fit)
           .frame(width: 60)
           .symbolRenderingMode(.palette)
-          .foregroundStyle(CustomShapeStyle.primaryStyle(for: weatherIconSystemName), CustomShapeStyle.secondaryStyle(for: weatherIconSystemName))
+          .foregroundStyle(
+            CustomShapeStyle.primaryStyle(for: weatherIconSystemName),
+            CustomShapeStyle.secondaryStyle(for: weatherIconSystemName))
         VStack(alignment: .leading) {
           Text(isCurrentLocation ? "My Location" : locality)
             .lineLimit(1)

@@ -13,12 +13,12 @@ private let weatherSummaryCellReuseIdentifier = "WeatherSummaryCell"
 final class ForecastCollectionViewController: UICollectionViewController {
 
   private let viewModel: WeatherContainerViewModelType
-  
+
   init(viewModel: WeatherContainerViewModelType) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -32,7 +32,8 @@ final class ForecastCollectionViewController: UICollectionViewController {
       WeatherSummaryTile(
         date: itemIdentifier?.date ?? .now,
         weatherIconSystemName: itemIdentifier?.weatherIconSystemName ?? "sun.max.fill",
-        temperature: itemIdentifier?.temperature ?? .init(value: 20, unit: UnitTemperature.celsius))
+        temperature: itemIdentifier?.temperature ?? .init(value: 20, unit: UnitTemperature.celsius)
+      )
       .redacted(reason: (itemIdentifier?.isPlaceholder == true) ? .placeholder : [])
     }
 
@@ -84,14 +85,18 @@ final class ForecastCollectionViewController: UICollectionViewController {
     let placeholderSummaries = (1...5).map { _ in return WeatherSummary.placeholder }
     snapshot.appendItems(placeholderSummaries)
     dataSource.apply(snapshot)
-    
+
     // Loading the actual forecast
     Task { @MainActor in
-      guard let forecast = try await viewModel
-        .reloadForecast(locAPI: LocationAPI.shared,
-                        weatherAPI: OpenWeatherAPI.shared,
-                        force: false) else { return }
-      
+      guard
+        let forecast =
+          try await viewModel
+          .reloadForecast(
+            locAPI: LocationAPI.shared,
+            weatherAPI: OpenWeatherAPI.shared,
+            force: false)
+      else { return }
+
       var snapshot = NSDiffableDataSourceSnapshot<Int, WeatherSummary?>()
       snapshot.appendSections([0])
       // Adding a placeholder

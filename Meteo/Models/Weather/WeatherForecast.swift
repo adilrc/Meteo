@@ -9,8 +9,4 @@ import Foundation
 
 struct WeatherForecast: Hashable {
   var weatherSummaries: [WeatherSummary]
-
-  init(weatherSummaries: [WeatherSummary]) {
-    self.weatherSummaries = weatherSummaries
-  }
 }

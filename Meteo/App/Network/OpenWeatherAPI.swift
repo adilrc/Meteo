@@ -37,7 +37,7 @@ final actor OpenWeatherAPI: OpenWeatherAPIWeatherProviding {
 
     return WeatherForecast.make(from: response)
   }
-  
+
   func search(_ input: String) async throws -> Set<Location> {
     return try await Set(openWeather.directGeocoding(input).map(Location.make(from:)))
   }

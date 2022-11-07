@@ -12,13 +12,13 @@ struct WeatherSummaryTile: View {
   private var date: Date
   private var weatherIconSystemName: String
   private var temperature: Measurement<UnitTemperature>
-  
+
   init(date: Date, weatherIconSystemName: String, temperature: Measurement<UnitTemperature>) {
     self.date = date
     self.weatherIconSystemName = weatherIconSystemName
     self.temperature = temperature
   }
-  
+
   private static let dateFormatter: DateFormatter = {
     let dateFormatter = DateFormatter()
     dateFormatter.setLocalizedDateFormatFromTemplate("E")
@@ -40,7 +40,9 @@ struct WeatherSummaryTile: View {
             .aspectRatio(contentMode: .fill)
             .frame(width: 30)
             .symbolRenderingMode(.palette)
-            .foregroundStyle(CustomShapeStyle.primaryStyle(for: weatherIconSystemName), CustomShapeStyle.secondaryStyle(for: weatherIconSystemName))
+            .foregroundStyle(
+              CustomShapeStyle.primaryStyle(for: weatherIconSystemName),
+              CustomShapeStyle.secondaryStyle(for: weatherIconSystemName))
           Text(temperature.formatted(.measurement(width: .narrow, usage: .weather)))
             .font(.system(size: 28))
             .fontWeight(.bold)

@@ -40,10 +40,11 @@ struct WeatherSummary: Hashable {
 
 extension WeatherSummary {
   static var placeholder: Self {
-    .init(date: .now,
-          weatherIconSystemName: "sun.max.fill",
-          temperature: .init(value: 20, unit: .celsius),
-          lastUpdate: .now,
-          isPlaceholder: true)
+    .init(
+      date: .now,
+      weatherIconSystemName: "sun.max.fill",
+      temperature: .init(value: 20, unit: .celsius),
+      lastUpdate: .now,
+      isPlaceholder: true)
   }
 }

@@ -16,7 +16,7 @@ enum CustomShapeStyle {
       return AnyShapeStyle(.quaternary)
     }
   }
-  
+
   static func secondaryStyle(for systemName: String) -> some ShapeStyle {
     if systemName.contains("sun") || systemName.contains("bolt") {
       return AnyShapeStyle(.yellow)

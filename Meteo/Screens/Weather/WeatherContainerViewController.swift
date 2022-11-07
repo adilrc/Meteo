@@ -77,21 +77,21 @@ final class WeatherContainerViewController: UIViewController {
     view.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(containerStackView)
     containerStackView.createConstraintsToFitInside(view)
-    
+
     containerStackView.addArrangedSubview(largeTitle)
     largeTitle.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor)
       .tagAndActivate()
     largeTitle.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor)
       .tagAndActivate()
-    
+
     containerStackView.addArrangedSubview(dateLabel)
     dateLabel.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor)
       .tagAndActivate()
     dateLabel.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor)
       .tagAndActivate()
-    
+
     addChild(weatherSummaryViewController)
-    
+
     containerStackView.addArrangedSubview(weatherSummaryViewController.view)
     weatherSummaryViewController.view.translatesAutoresizingMaskIntoConstraints = false
     weatherSummaryViewController.view.leadingAnchor.constraint(
@@ -100,15 +100,15 @@ final class WeatherContainerViewController: UIViewController {
     weatherSummaryViewController.view.trailingAnchor.constraint(
       equalTo: view.layoutMarginsGuide.trailingAnchor
     ).tagAndActivate()
-    
+
     containerStackView.addArrangedSubview(forecastLabel)
     forecastLabel.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor)
       .tagAndActivate()
     forecastLabel.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor)
       .tagAndActivate()
-    
+
     addChild(forecastViewController)
-    
+
     containerStackView.addArrangedSubview(forecastViewController.view)
     forecastViewController.view.translatesAutoresizingMaskIntoConstraints = false
     forecastViewController.view.leadingAnchor.constraint(
@@ -124,7 +124,7 @@ final class WeatherContainerViewController: UIViewController {
       equalToConstant: 200
     ).tagAndActivate()
   }
-  
+
   private var subscriptions = Set<AnyCancellable>()
   private func subscribe(to viewModel: WeatherContainerViewModelType) {
     viewModel
@@ -135,7 +135,7 @@ final class WeatherContainerViewController: UIViewController {
       }
       .store(in: &subscriptions)
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupViewHierarchy()

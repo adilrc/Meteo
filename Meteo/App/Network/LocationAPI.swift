@@ -42,13 +42,13 @@ final class LocationAPI: NSObject, LocationProviding {
         }
         .store(in: &subscriptions)
     }
-    
+
     // Get user's current location name
     let geocoder = CLGeocoder()
     let placemarks = try await geocoder.reverseGeocodeLocation(currentLocation)
 
     guard let locality = placemarks.first?.locality else { return nil }
-    
+
     return .init(
       Location(
         locality: locality,

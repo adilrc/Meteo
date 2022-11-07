@@ -19,8 +19,9 @@ struct WeatherFocusView: View {
         .aspectRatio(contentMode: .fit)
         .frame(width: 120)
         .symbolRenderingMode(.palette)
-        .foregroundStyle(CustomShapeStyle.primaryStyle(for: weatherIconSystemName),
-                         CustomShapeStyle.secondaryStyle(for: weatherIconSystemName))
+        .foregroundStyle(
+          CustomShapeStyle.primaryStyle(for: weatherIconSystemName),
+          CustomShapeStyle.secondaryStyle(for: weatherIconSystemName))
       Text(
         temperature.formatted(
           .measurement(width: .narrow, usage: .weather))

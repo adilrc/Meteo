@@ -10,10 +10,11 @@ import OpenWeather
 
 extension Location {
   static func make(from response: OWGeocodingResponse) -> Self {
-    Location(locality: response.name,
-             latitude: response.latitude,
-             longitude: response.longitude,
-             countryCode: response.countryCode,
-             state: response.state)
+    Location(
+      locality: response.name,
+      latitude: response.latitude,
+      longitude: response.longitude,
+      countryCode: response.countryCode,
+      state: response.state)
   }
 }

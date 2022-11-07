@@ -13,24 +13,24 @@ struct Location: Codable, Hashable {
   let longitude: Double
   var countryCode: String?
   var state: String?
-  
+
   func hash(into hasher: inout Hasher) {
     hasher.combine(description)
   }
-  
-  static func ==(lhs: Self, rhs: Self) -> Bool {
-      return lhs.description == rhs.description
+
+  static func == (lhs: Self, rhs: Self) -> Bool {
+    return lhs.description == rhs.description
   }
 }
 
 extension Location: CustomStringConvertible {
   var description: String {
     var label = "\(locality)"
-    
+
     if let state = state {
       label.append(", " + state)
     }
-    
+
     if let countryCode = countryCode {
       label.append(", " + countryCode)
     }
@@ -40,8 +40,8 @@ extension Location: CustomStringConvertible {
 }
 
 extension Location: Comparable {
-  static func <(lhs: Location, rhs: Location) -> Bool {
-      return lhs.description < rhs.description
+  static func < (lhs: Location, rhs: Location) -> Bool {
+    return lhs.description < rhs.description
   }
 }
 
