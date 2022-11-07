@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct WeatherWrapper {
+struct WeatherWrapper: Hashable {
   let weatherSummary: WeatherSummary
   let location: Location
 }

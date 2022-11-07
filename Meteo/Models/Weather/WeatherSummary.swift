@@ -15,6 +15,8 @@ struct WeatherSummary: Hashable {
 
   var minTemp: Measurement<UnitTemperature>?
   var maxTemp: Measurement<UnitTemperature>?
+  var description: String?
+  var timeZone: TimeZone?
 
   let lastUpdate: Date
   let isPlaceholder: Bool
@@ -25,6 +27,8 @@ struct WeatherSummary: Hashable {
     temperature: Measurement<UnitTemperature>,
     minTemp: Measurement<UnitTemperature>? = nil,
     maxTemp: Measurement<UnitTemperature>? = nil,
+    description: String? = nil,
+    timeZone: TimeZone? = nil,
     lastUpdate: Date,
     isPlaceholder: Bool
   ) {
@@ -33,6 +37,8 @@ struct WeatherSummary: Hashable {
     self.temperature = temperature
     self.minTemp = minTemp
     self.maxTemp = maxTemp
+    self.description = description
+    self.timeZone = timeZone
     self.lastUpdate = lastUpdate
     self.isPlaceholder = isPlaceholder
   }

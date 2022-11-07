@@ -61,8 +61,8 @@ struct FavoriteTileView: View {
           Text(description)
             .font(.callout)
         }
-      }.frame(height: 110)
-    }.cornerRadius(30)
+      }.frame(height: 90)
+    }.cornerRadius(20)
   }
 }
 

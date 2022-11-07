@@ -5,89 +5,103 @@
 //  Created by Adil Erchouk on 11/6/22.
 //
 
+import SwiftUI
 import UIKit
 
-private let reuseIdentifier = "Cell"
+private let favoritesCellReuseIdentifier = "FavoritesCell"
 
 final class FavoritesCollectionViewController: UICollectionViewController {
 
-  override func viewDidLoad() {
-    super.viewDidLoad()
+  private let viewModel: SearchContainerViewModelType
 
-    // Uncomment the following line to preserve selection between presentations
-    // self.clearsSelectionOnViewWillAppear = false
-
-    // Register cell classes
-    self.collectionView!.register(
-      UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
-    // Do any additional setup after loading the view.
+  init(viewModel: SearchContainerViewModelType) {
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
   }
 
-  /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-  // MARK: UICollectionViewDataSource
-
-  override func numberOfSections(in collectionView: UICollectionView) -> Int {
-    // #warning Incomplete implementation, return the number of sections
-    return 0
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
   }
 
-  override func collectionView(
-    _ collectionView: UICollectionView, numberOfItemsInSection section: Int
-  ) -> Int {
-    // #warning Incomplete implementation, return the number of items
-    return 0
+  private func makeCollectionViewLayout() -> UICollectionViewLayout {
+    let itemSize = NSCollectionLayoutSize(
+      widthDimension: .fractionalWidth(1.0),
+      heightDimension: .fractionalHeight(1.0))
+    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+    let groupSize = NSCollectionLayoutSize(
+      widthDimension: .fractionalWidth(1.0),
+      heightDimension: .absolute(122))
+    let group = NSCollectionLayoutGroup.horizontal(
+      layoutSize: groupSize,
+      subitems: [item])
+
+    let section = NSCollectionLayoutSection(group: group)
+    section.interGroupSpacing = 10.0
+    section.contentInsets = .init(top: 20.0, leading: 0, bottom: 0, trailing: 0)
+
+    let config = UICollectionViewCompositionalLayoutConfiguration()
+    config.scrollDirection = .vertical
+
+    let layout = UICollectionViewCompositionalLayout(section: section, configuration: config)
+
+    return layout
   }
 
-  override func collectionView(
-    _ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath
-  ) -> UICollectionViewCell {
+  private lazy var layout = makeCollectionViewLayout()
+
+  private lazy var dataSource = UICollectionViewDiffableDataSource<Int, WeatherWrapper>(
+    collectionView: collectionView
+  ) { collectionView, indexPath, itemIdentifier in
     let cell = collectionView.dequeueReusableCell(
-      withReuseIdentifier: reuseIdentifier, for: indexPath)
+      withReuseIdentifier: favoritesCellReuseIdentifier, for: indexPath)
 
-    // Configure the cell
+    cell.contentConfiguration = UIHostingConfiguration {
+      FavoriteTileView(
+        isCurrentLocation: true,
+        locality: itemIdentifier.location.locality,
+        dateStringAtLocation: "12:00 p.m.",
+        weatherIconSystemName: itemIdentifier.weatherSummary.weatherIconSystemName,
+        description: itemIdentifier.weatherSummary.description ?? "",
+        temperature: itemIdentifier.weatherSummary.temperature)
+    }
 
     return cell
   }
 
-  // MARK: UICollectionViewDelegate
+  private func registerCells() {
+    collectionView.register(
+      UICollectionViewCell.self, forCellWithReuseIdentifier: favoritesCellReuseIdentifier)
+  }
 
-  /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
+  override func loadView() {
+    self.view = UIView()
+    let collectionView = UICollectionView(
+      frame: .zero, collectionViewLayout: layout)
+    self.collectionView = collectionView
+    self.view = collectionView
+  }
 
-  /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    registerCells()
 
-  /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
+    var snaphot = NSDiffableDataSourceSnapshot<Int, WeatherWrapper>()
+    snaphot.appendSections([0])
+    snaphot.appendItems([
+      .init(
+        weatherSummary: .init(
+          date: .now,
+          weatherIconSystemName: "cloud.sun.fill",
+          temperature: .init(value: 20, unit: .celsius),
+          lastUpdate: .now,
+          isPlaceholder: false),
+        location: .init(
+          locality: "Paris",
+          latitude: 0,
+          longitude: 0))
+    ])
 
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-
-    }
-    */
-
+    dataSource.apply(snaphot)
+  }
 }

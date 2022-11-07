@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserFavorites: Codable {
+struct UserFavorites: Codable, Hashable {
   let locations: [Location]
 }
 
