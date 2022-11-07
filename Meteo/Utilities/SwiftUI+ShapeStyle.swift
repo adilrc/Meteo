@@ -10,10 +10,10 @@ import SwiftUI
 enum CustomShapeStyle {
   static func primaryStyle(for systemName: String) -> some ShapeStyle {
     switch systemName {
-    case "sun.max.fill", "moon.fill":
-      return AnyShapeStyle(.yellow)
-    default:
-      return AnyShapeStyle(.quaternary)
+      case "sun.max.fill", "moon.fill":
+        return AnyShapeStyle(.yellow)
+      default:
+        return AnyShapeStyle(.quaternary)
     }
   }
 

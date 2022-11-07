@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct WeatherSummaryView: View {
-  @ObservedObject var viewModel: WeatherContainerViewModel
+struct WeatherSummaryView<ViewModel: WeatherContainerViewModelType>: View {
+  @ObservedObject var viewModel: ViewModel
 
   private var summary: WeatherSummary? {
     viewModel.weatherWrapper?.weatherSummary
@@ -31,7 +31,10 @@ struct WeatherSummaryView: View {
     }
     .task {
       do {
-        _ = try await viewModel.reloadWeatherSummary()
+        _ = try await viewModel.reloadWeatherSummary(
+          locAPI: LocationAPI.shared,
+          weatherAPI: OpenWeatherAPI.shared,
+          force: false)
       } catch {
         logger.error("\(error.localizedDescription)")
       }
@@ -42,7 +45,7 @@ struct WeatherSummaryView: View {
 #if DEBUG
   struct WeatherSummaryView_Previews: PreviewProvider {
     static var previews: some View {
-      WeatherSummaryView(viewModel: .init())
+      WeatherSummaryView<WeatherContainerViewModel>(viewModel: .init())
     }
   }
 #endif

@@ -10,10 +10,10 @@ import SwiftUI
 import UIKit
 
 /// Container for the selected location today's weather and the five days forecast.
-final class WeatherContainerViewController: UIViewController {
-  let viewModel: WeatherContainerViewModelType
+final class WeatherContainerViewController<ViewModel: WeatherContainerViewModelType>: UIViewController {
+  let viewModel: ViewModel
 
-  init(viewModel: WeatherContainerViewModelType) {
+  init(viewModel: ViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
@@ -54,8 +54,7 @@ final class WeatherContainerViewController: UIViewController {
     return label
   }()
 
-  private lazy var weatherSummaryView = WeatherSummaryView(
-    viewModel: viewModel as! WeatherContainerViewModel)
+  private lazy var weatherSummaryView = WeatherSummaryView<ViewModel>(viewModel: viewModel)
 
   private lazy var weatherSummaryViewController = UIHostingController(rootView: weatherSummaryView)
 
@@ -126,7 +125,7 @@ final class WeatherContainerViewController: UIViewController {
   }
 
   private var subscriptions = Set<AnyCancellable>()
-  private func subscribe(to viewModel: WeatherContainerViewModelType) {
+  private func subscribe(to viewModel: ViewModel) {
     viewModel
       .weatherWrapperPublisher
       .sink { [weak self] wrapper in

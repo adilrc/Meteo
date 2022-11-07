@@ -9,7 +9,7 @@ import UIKit
 
 extension UIView {
   @discardableResult
-  public func createConstraintsToFitInside(
+  func createConstraintsToFitInside(
     _ parentView: UIView, spacing: CGFloat = 0, priority: UILayoutPriority = .required,
     activate: Bool = true, file: String = #file, function: String = #function, line: Int = #line
   ) -> [NSLayoutConstraint] {
@@ -19,7 +19,7 @@ extension UIView {
   }
 
   @discardableResult
-  public func createConstraintsToFitInside(
+  func createConstraintsToFitInside(
     _ parentView: UIView, verticalSpacing: CGFloat, horizontalSpacing: CGFloat,
     priority: UILayoutPriority = .required, activate: Bool = true, file: String = #file,
     function: String = #function, line: Int = #line
@@ -31,7 +31,7 @@ extension UIView {
   }
 
   @discardableResult
-  public func createConstraintsToFitInside(
+  func createConstraintsToFitInside(
     _ parentView: UIView, topSpacing: CGFloat, bottomSpacing: CGFloat, leadingSpacing: CGFloat,
     trailingSpacing: CGFloat, priority: UILayoutPriority = .required, activate: Bool = true,
     file: String = #file, function: String = #function, line: Int = #line
@@ -70,7 +70,7 @@ extension UIView {
   }
 
   @discardableResult
-  public func createConstraintsToCenterViewInside(
+  func createConstraintsToCenterViewInside(
     _ parentView: UIView, priority: UILayoutPriority = .required, activate: Bool = true,
     file: String = #file, function: String = #function, line: Int = #line
   ) -> [NSLayoutConstraint] {

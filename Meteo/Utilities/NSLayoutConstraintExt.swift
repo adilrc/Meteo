@@ -11,7 +11,7 @@ extension NSLayoutConstraint {
   /// Debugging utility to tag a constraint with a name, as well as file/line/function
   /// This identifier is used when constraints are printed to the console (e.g. during conflicts))
   @discardableResult
-  public func tag(
+  func tag(
     name: String? = nil, file: String = #file, function: String = #function, line: Int = #line
   ) -> Self {
     identifier =
@@ -23,15 +23,17 @@ extension NSLayoutConstraint {
   /// Debugging utility to tag a constraint with a name, as well as file/line/function
   /// This identifier is used when constraints are printed to the console (e.g. during conflicts))
   @discardableResult
-  public func tagAndActivate(
+  func tagAndActivate(
     name: String? = nil, file: String = #file, function: String = #function, line: Int = #line
   ) -> Self {
     tag(name: name, file: file, function: function, line: line)
     return activate()
   }
 
+  /// Activate the given constraint. Make sure the constraint is part of the view hierarchy or
+  /// calling this method could lead to a crash.
   @discardableResult
-  public func activate() -> Self {
+  func activate() -> Self {
     isActive = true
     return self
   }
@@ -41,7 +43,7 @@ extension UILayoutGuide {
   /// Debugging utility to tag a constraint with a name, as well as file/line/function
   /// This identifier is used when constraints are printed to the console (e.g. during conflicts))
   @discardableResult
-  public func tag(
+  func tag(
     name: String? = nil, file: String = #file, function: String = #function, line: Int = #line
   ) -> Self {
     identifier = .init(

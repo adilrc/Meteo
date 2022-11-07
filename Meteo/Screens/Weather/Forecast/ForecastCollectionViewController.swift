@@ -10,11 +10,11 @@ import UIKit
 
 private let weatherSummaryCellReuseIdentifier = "WeatherSummaryCell"
 
-final class ForecastCollectionViewController: UICollectionViewController {
+final class ForecastCollectionViewController<ViewModel: WeatherContainerViewModelType>: UICollectionViewController {
 
-  private let viewModel: WeatherContainerViewModelType
+  private let viewModel: ViewModel
 
-  init(viewModel: WeatherContainerViewModelType) {
+  init(viewModel: ViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }

@@ -13,28 +13,28 @@ enum AppTab: CaseIterable {
 
   var title: String {
     switch self {
-    case .weather:
-      return "Weather"
-    case .search:
-      return "Search"
+      case .weather:
+        return "Weather"
+      case .search:
+        return "Search"
     }
   }
 
   var image: UIImage? {
     switch self {
-    case .weather:
-      return UIImage(systemName: "cloud.sun.fill")
-    case .search:
-      return UIImage(systemName: "magnifyingglass")
+      case .weather:
+        return UIImage(systemName: "cloud.sun.fill")
+      case .search:
+        return UIImage(systemName: "magnifyingglass")
     }
   }
 
   func makeRootViewController() -> UIViewController {
     switch self {
-    case .weather:
-      return WeatherTabViewController()
-    case .search:
-      return SearchTabViewController()
+      case .weather:
+        return WeatherTabViewController()
+      case .search:
+        return SearchTabViewController()
     }
   }
 }

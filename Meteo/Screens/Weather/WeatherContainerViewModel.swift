@@ -8,8 +8,10 @@
 import Combine
 import Foundation
 
-protocol WeatherContainerViewModelType: NSObjectProtocol {
+protocol WeatherContainerViewModelType: NSObjectProtocol, ObservableObject {
   var selectedLocation: Location? { get }
+
+  var weatherWrapper: WeatherWrapper? { get set }
   var weatherWrapperPublisher: Published<WeatherWrapper?>.Publisher { get }
 
   func reloadWeatherSummary(
@@ -20,7 +22,7 @@ protocol WeatherContainerViewModelType: NSObjectProtocol {
   ) async throws -> WeatherForecast?
 }
 
-final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType, ObservableObject {
+final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType {
   var selectedLocation: Location?
 
   init(selectedLocation: Location? = nil) {
@@ -32,7 +34,9 @@ final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType, 
     return Date.now.timeIntervalSince(weatherWrapper.weatherSummary.lastUpdate) > 60 * 5
   }
 
-  private func currentLocation(_ locAPI: LocationProviding = LocationAPI.shared) async throws
+  private func currentLocation(
+    _ locAPI: LocationProviding = LocationAPI.shared
+  ) async throws
     -> Location
   {
     if let selectedLocation {
