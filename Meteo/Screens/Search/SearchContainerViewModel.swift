@@ -9,8 +9,8 @@ import Combine
 import Foundation
 
 protocol SearchContainerViewModelType {
-  func reloadFavoriteLocations(force: Bool) async throws -> [Location]
-  func refresh(_ weatherWrappers: [WeatherWrapper], priority: TaskPriority) async -> [Result<WeatherWrapper, Error>]
+  func reloadFavoriteLocations() async throws -> [Location]
+  func refresh(_ weatherWrappers: [WeatherWrapper], force: Bool, priority: TaskPriority) async throws -> [Result<WeatherWrapper, Error>]?
 
   func addFavorite(_ location: Location)
   func removeFavorite(_ location: Location)
@@ -28,7 +28,7 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
     self.weatherAPI = weatherAPI
   }
 
-  func reloadFavoriteLocations(force: Bool) async throws -> [Location] {
+  func reloadFavoriteLocations() async throws -> [Location] {
     var locations: [Location] = []
 
     let favoriteLocations = FavoritesStore.favorites()?.locations ?? []
@@ -57,8 +57,15 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
     return locations
   }
 
-  func refresh(_ weatherWrappers: [WeatherWrapper], priority: TaskPriority) async -> [Result<WeatherWrapper, Error>] {
-    await withTaskGroup(of: Result<WeatherWrapper, Error>.self) { [unowned self] taskGroup in
+  func refresh(_ weatherWrappers: [WeatherWrapper], force: Bool, priority: TaskPriority) async -> [Result<WeatherWrapper, Error>]? {
+    guard let wrapper = weatherWrappers.first else { return nil }
+
+    var isFirstRequest: Bool { wrapper.weatherSummary.isPlaceholder }
+    var lastRequestOlderThanTenMinutes: Bool { Date.now.timeIntervalSince(wrapper.weatherSummary.lastUpdate) > 60 * 10 }
+
+    guard isFirstRequest || lastRequestOlderThanTenMinutes || force else { return nil }
+
+    return await withTaskGroup(of: Result<WeatherWrapper, Error>.self) { [unowned self] taskGroup in
       var results = [Result<WeatherWrapper, Error>]()
 
       for wrapper in weatherWrappers {

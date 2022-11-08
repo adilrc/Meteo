@@ -49,18 +49,18 @@ struct FavoriteTileView: View {
             CustomShapeStyle.secondaryStyle(for: weatherIconSystemName))
         VStack(alignment: .leading) {
           Text(isCurrentLocation ? "My Location" : locality)
-            .lineLimit(1)
+            .lineLimit(2)
             .font(.title2)
           Text(isCurrentLocation ? locality : dateStringAtLocation)
-            .lineLimit(2)
+            .lineLimit(1)
             .font(.caption)
             .foregroundColor(.secondary)
         }
-        .layoutPriority(1)
         Spacer()
         VStack(alignment: .trailing) {
           Text(temperature.formatted(.measurement(width: .narrow, usage: .weather)))
             .font(.largeTitle)
+            .layoutPriority(1)
           Text(description)
             .font(.caption)
             .lineLimit(2)

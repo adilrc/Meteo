@@ -24,7 +24,7 @@ final class LocationAPI: NSObject, LocationProviding {
   static let shared = LocationAPI()
 
   private let locationManager = CLLocationManager()
-  private var currentLocationPublisher: CurrentValueSubject<CLLocation?, Never> = .init(nil)
+  private var currentLocationPublisher: CurrentValueSubject<CLLocation?, Error> = .init(nil)
   private var subscriptions = Set<AnyCancellable>()
 
   func userLocation() async throws -> Location {
@@ -38,13 +38,23 @@ final class LocationAPI: NSObject, LocationProviding {
       locationManager.startUpdatingLocation()
     }
 
-    let currentLocation = await withCheckedContinuation { continuation in
+    let currentLocation = try await withCheckedThrowingContinuation { continuation in
       currentLocationPublisher
         .compactMap { $0 }
         .first()
-        .sink { location in
-          continuation.resume(returning: location)
-        }
+        .sink(
+          receiveCompletion: { completion in
+            switch completion {
+              case let .failure(error):
+                continuation.resume(throwing: error)
+              default:
+                break
+            }
+          },
+          receiveValue: { location in
+            continuation.resume(returning: location)
+          }
+        )
         .store(in: &subscriptions)
     }
 
@@ -76,5 +86,14 @@ extension LocationAPI: CLLocationManagerDelegate {
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     guard let location = manager.location else { return }
     currentLocationPublisher.value = location
+  }
+
+  func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+    switch manager.authorizationStatus {
+      case .denied, .restricted:
+        currentLocationPublisher.send(completion: .failure(LocationAPIError.userDenied))
+      default:
+        break
+    }
   }
 }

@@ -34,6 +34,13 @@ final class FavoritesCollectionViewController<ViewModel: SearchContainerViewMode
     dataSource.apply(snapshot)
   }
 
+  private func selectWeatherWrapper(_ wrapper: WeatherWrapper) {
+    NotificationCenter.default.post(
+      name: .userDidSelectLocation,
+      object: self,
+      userInfo: [UserSelectedLocation.key: wrapper])
+  }
+
   private lazy var dataSource = UICollectionViewDiffableDataSource<Int, WeatherWrapper>(
     collectionView: collectionView
   ) { collectionView, indexPath, itemIdentifier in
@@ -59,21 +66,36 @@ final class FavoritesCollectionViewController<ViewModel: SearchContainerViewMode
         }
         .tint(.red)
       }
+      .onTapGesture {
+        self?.selectWeatherWrapper(itemIdentifier)
+      }
     }
 
     return cell
   }
+
+  @objc private func refresh(_ sender: UIRefreshControl) {
+    refresh(dataSource.snapshot().itemIdentifiers, force: true)
+  }
+
+  private lazy var refreshControl: UIRefreshControl = {
+    let refreshControl = UIRefreshControl()
+    refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+    return refreshControl
+  }()
 
   private func registerCells() {
     collectionView.register(
       UICollectionViewCell.self, forCellWithReuseIdentifier: favoritesCellReuseIdentifier)
   }
 
+  var setupPlaceholdersTask: Task<Void, Error>?
+
   @MainActor
-  private func reloadFavoritesWeather(force: Bool = false) {
-    Task {
+  private func setupPlaceholders() {
+    setupPlaceholdersTask = Task {
       // Fetch locations
-      let locations = try await viewModel.reloadFavoriteLocations(force: force)
+      let locations = try await self.viewModel.reloadFavoriteLocations()
 
       // Create placeholders
       let placeholderWeatherWrappers = locations.map { WeatherWrapper(weatherSummary: .placeholder, location: $0) }
@@ -83,9 +105,14 @@ final class FavoritesCollectionViewController<ViewModel: SearchContainerViewMode
       placeholderSnaphot.appendSections([0])
       placeholderSnaphot.appendItems(placeholderWeatherWrappers)
       await dataSource.apply(placeholderSnaphot)
+    }
+  }
 
+  @MainActor
+  private func refresh(_ wrappers: [WeatherWrapper], force: Bool = false) {
+    Task {
       // Fetch weather wrappers
-      let results = await viewModel.refresh(placeholderWeatherWrappers, priority: .utility)
+      guard let results = try await viewModel.refresh(wrappers, force: force, priority: .utility) else { return }
 
       var weatherSnapshot = dataSource.snapshot()
 
@@ -109,6 +136,7 @@ final class FavoritesCollectionViewController<ViewModel: SearchContainerViewMode
       weatherSnapshot.deleteItems(itemsToDelete)
 
       await dataSource.apply(weatherSnapshot)
+      refreshControl.endRefreshing()
     }
   }
 
@@ -118,6 +146,7 @@ final class FavoritesCollectionViewController<ViewModel: SearchContainerViewMode
     layoutConfig.showsSeparators = false
     let listLayout = UICollectionViewCompositionalLayout.list(using: layoutConfig)
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: listLayout)
+    collectionView.refreshControl = refreshControl
     self.collectionView = collectionView
     self.view = collectionView
   }
@@ -133,7 +162,7 @@ final class FavoritesCollectionViewController<ViewModel: SearchContainerViewMode
 
     // Populate placeholder item
     Task { @MainActor in
-      guard let weatherWrapper = try await self.viewModel.refresh([placeholder], priority: .utility).first?.get() else { return }
+      guard let weatherWrapper = try await self.viewModel.refresh([placeholder], force: true, priority: .utility)?.first?.get() else { return }
       var snapshot = self.dataSource.snapshot()
       snapshot.reconfigureItems([weatherWrapper])
       await self.dataSource.apply(snapshot)
@@ -143,6 +172,14 @@ final class FavoritesCollectionViewController<ViewModel: SearchContainerViewMode
   override func viewDidLoad() {
     super.viewDidLoad()
     registerCells()
-    reloadFavoritesWeather()
+    setupPlaceholders()
+  }
+
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    Task {
+      _ = await setupPlaceholdersTask?.result
+      refresh(dataSource.snapshot().itemIdentifiers)
+    }
   }
 }

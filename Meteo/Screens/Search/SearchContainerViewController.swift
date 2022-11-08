@@ -53,6 +53,7 @@ final class SearchContainerViewController<ViewModel: SearchContainerViewModelTyp
     largeTitle.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor)
       .tagAndActivate()
 
+    addChild(favoritesCollectionViewController)
     containerStackView.addArrangedSubview(favoritesCollectionViewController.view)
     favoritesCollectionViewController.view.leadingAnchor.constraint(
       equalTo: containerStackView.leadingAnchor

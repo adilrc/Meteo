@@ -14,6 +14,7 @@
 		BB05469D29171D5A00B1C64E /* MeteoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB05469C29171D5A00B1C64E /* MeteoTests.swift */; };
 		BB0546A729171D5A00B1C64E /* MeteoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0546A629171D5A00B1C64E /* MeteoUITests.swift */; };
 		BB0546A929171D5A00B1C64E /* MeteoUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0546A829171D5A00B1C64E /* MeteoUITestsLaunchTests.swift */; };
+		BB0E90DF291A227200FB0210 /* UserSelectedLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0E90DE291A227200FB0210 /* UserSelectedLocation.swift */; };
 		BB1EFC462918A10800F68C7F /* SwiftUI+ShapeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1EFC452918A10800F68C7F /* SwiftUI+ShapeStyle.swift */; };
 		BB32EFEC29177F44005157CB /* WeatherSummaryTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB32EFEB29177F44005157CB /* WeatherSummaryTile.swift */; };
 		BB32EFEE2917829B005157CB /* WeatherContainerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB32EFED2917829B005157CB /* WeatherContainerViewModel.swift */; };
@@ -81,6 +82,7 @@
 		BB0546A229171D5A00B1C64E /* MeteoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MeteoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0546A629171D5A00B1C64E /* MeteoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeteoUITests.swift; sourceTree = "<group>"; };
 		BB0546A829171D5A00B1C64E /* MeteoUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeteoUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		BB0E90DE291A227200FB0210 /* UserSelectedLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSelectedLocation.swift; sourceTree = "<group>"; };
 		BB1EFC452918A10800F68C7F /* SwiftUI+ShapeStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+ShapeStyle.swift"; sourceTree = "<group>"; };
 		BB32EFEB29177F44005157CB /* WeatherSummaryTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherSummaryTile.swift; sourceTree = "<group>"; };
 		BB32EFED2917829B005157CB /* WeatherContainerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherContainerViewModel.swift; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 			children = (
 				BBFC12F729172BBE00955ABE /* UserSettings.swift */,
 				BBFC12F929172BC700955ABE /* UserFavorites.swift */,
+				BB0E90DE291A227200FB0210 /* UserSelectedLocation.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -532,6 +535,7 @@
 				BBFC130E291736AD00955ABE /* FavoritesStore.swift in Sources */,
 				BBFC135C29176F5600955ABE /* WeatherContainerViewController.swift in Sources */,
 				BBEE55322918E35900977081 /* SearchContainerViewController.swift in Sources */,
+				BB0E90DF291A227200FB0210 /* UserSelectedLocation.swift in Sources */,
 				BB1EFC462918A10800F68C7F /* SwiftUI+ShapeStyle.swift in Sources */,
 				BB489EFE2919ED74009A51DF /* AddFavoriteSheetPresentationController.swift in Sources */,
 				BBF8098E2918B3D900890A89 /* SearchResultTableViewController.swift in Sources */,

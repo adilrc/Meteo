@@ -77,7 +77,7 @@ final class ForecastCollectionViewController<ViewModel: WeatherContainerViewMode
       forCellWithReuseIdentifier: weatherSummaryCellReuseIdentifier)
   }
 
-  private func loadContent() {
+  private func setupPlaceholders() {
     // Adding placeholders
     var snapshot = NSDiffableDataSourceSnapshot<Int, WeatherSummary?>()
     snapshot.appendSections([0])
@@ -85,7 +85,9 @@ final class ForecastCollectionViewController<ViewModel: WeatherContainerViewMode
     let placeholderSummaries = (1...5).map { _ in return WeatherSummary.placeholder }
     snapshot.appendItems(placeholderSummaries)
     dataSource.apply(snapshot)
+  }
 
+  private func loadContent() {
     // Loading the actual forecast
     Task { @MainActor in
       guard
@@ -117,6 +119,11 @@ final class ForecastCollectionViewController<ViewModel: WeatherContainerViewMode
     super.viewDidLoad()
     setupCollectionView()
     registerCell()
+    setupPlaceholders()
+  }
+
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
     loadContent()
   }
 }

@@ -23,15 +23,30 @@ protocol WeatherContainerViewModelType: NSObjectProtocol, ObservableObject {
 }
 
 final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType {
-  var selectedLocation: Location?
+
+  private(set) var selectedLocation: Location?
+  private var subscriptions = Set<AnyCancellable>()
+
+  private func setupListeners() {
+    NotificationCenter.default.publisher(for: .userDidSelectLocation)
+      .compactMap { $0.userInfo?[UserSelectedLocation.key] as? WeatherWrapper }
+      .sink { [weak self] weatherWrapper in
+        guard let self = self else { return }
+        self.selectedLocation = weatherWrapper.location
+        self.weatherWrapper = weatherWrapper
+      }
+      .store(in: &subscriptions)
+  }
 
   init(selectedLocation: Location? = nil) {
     self.selectedLocation = selectedLocation
+    super.init()
+    setupListeners()
   }
 
-  private var lastRequestOlderThanFiveMinutes: Bool {
+  private var lastRequestOlderThanTenMinutes: Bool {
     guard let weatherWrapper else { return true }
-    return Date.now.timeIntervalSince(weatherWrapper.weatherSummary.lastUpdate) > 60 * 5
+    return Date.now.timeIntervalSince(weatherWrapper.weatherSummary.lastUpdate) > 60 * 10
   }
 
   private func currentLocation(
@@ -48,7 +63,7 @@ final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType {
       return userLocation
     } else {
       // Fallbacks  to a default location if user doesn't provides location
-      return .paris
+      return .sanDiego
     }
   }
 
@@ -58,7 +73,7 @@ final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType {
     weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared,
     force: Bool = false
   ) async throws -> WeatherWrapper? {
-    guard lastRequestOlderThanFiveMinutes || force else { return nil }
+    guard lastRequestOlderThanTenMinutes || force else { return nil }
 
     let location = try await currentLocation(locAPI)
     logger.info("􀇕 Reloading weather summary for location: \(location.locality).")
@@ -76,7 +91,7 @@ final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType {
   func reloadForecast(
     locAPI: LocationProviding, weatherAPI: OpenWeatherAPIWeatherProviding, force: Bool
   ) async throws -> WeatherForecast? {
-    guard lastRequestOlderThanFiveMinutes || force else { return nil }
+    guard lastRequestOlderThanTenMinutes || force else { return nil }
 
     let location = try await currentLocation(locAPI)
     logger.info("􀇕 Reloading weather forecast for location: \(location.locality).")
