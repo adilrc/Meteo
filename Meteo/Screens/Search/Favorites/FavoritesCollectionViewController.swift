@@ -5,16 +5,17 @@
 //  Created by Adil Erchouk on 11/6/22.
 //
 
+import Combine
 import SwiftUI
 import UIKit
 
 private let favoritesCellReuseIdentifier = "FavoritesCell"
 
-final class FavoritesCollectionViewController: UICollectionViewController {
+final class FavoritesCollectionViewController<ViewModel: SearchContainerViewModelType>: UICollectionViewController {
 
-  private let viewModel: SearchContainerViewModelType
+  private let viewModel: ViewModel
 
-  init(viewModel: SearchContainerViewModelType) {
+  init(viewModel: ViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
@@ -23,47 +24,40 @@ final class FavoritesCollectionViewController: UICollectionViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
-  private func makeCollectionViewLayout() -> UICollectionViewLayout {
-    let itemSize = NSCollectionLayoutSize(
-      widthDimension: .fractionalWidth(1.0),
-      heightDimension: .fractionalHeight(1.0))
-    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-    let groupSize = NSCollectionLayoutSize(
-      widthDimension: .fractionalWidth(1.0),
-      heightDimension: .absolute(122))
-    let group = NSCollectionLayoutGroup.horizontal(
-      layoutSize: groupSize,
-      subitems: [item])
-
-    let section = NSCollectionLayoutSection(group: group)
-    section.interGroupSpacing = 10.0
-    section.contentInsets = .init(top: 20.0, leading: 0, bottom: 0, trailing: 0)
-
-    let config = UICollectionViewCompositionalLayoutConfiguration()
-    config.scrollDirection = .vertical
-
-    let layout = UICollectionViewCompositionalLayout(section: section, configuration: config)
-
-    return layout
+  private func delete(_ weatherWrapper: WeatherWrapper) {
+    // Remove from user favorites database
+    viewModel.removeFavorite(weatherWrapper.location)
+    
+    // Remove from the list
+    var snapshot = dataSource.snapshot()
+    snapshot.deleteItems([weatherWrapper])
+    dataSource.apply(snapshot)
   }
-
-  private lazy var layout = makeCollectionViewLayout()
-
+  
   private lazy var dataSource = UICollectionViewDiffableDataSource<Int, WeatherWrapper>(
     collectionView: collectionView
   ) { collectionView, indexPath, itemIdentifier in
     let cell = collectionView.dequeueReusableCell(
       withReuseIdentifier: favoritesCellReuseIdentifier, for: indexPath)
 
-    cell.contentConfiguration = UIHostingConfiguration {
+    cell.contentConfiguration = UIHostingConfiguration { [weak self] in
       FavoriteTileView(
-        isCurrentLocation: true,
+        isCurrentLocation: itemIdentifier.location.isCurrentLocation,
         locality: itemIdentifier.location.locality,
-        dateStringAtLocation: "12:00 p.m.",
+        dateStringAtLocation: ViewModel.timeLabel(for: itemIdentifier.weatherSummary),
         weatherIconSystemName: itemIdentifier.weatherSummary.weatherIconSystemName,
         description: itemIdentifier.weatherSummary.description ?? "",
-        temperature: itemIdentifier.weatherSummary.temperature)
+        temperature: itemIdentifier.weatherSummary.temperature,
+        isPlaceholder: itemIdentifier.weatherSummary.isPlaceholder)
+      .redacted(reason: itemIdentifier.weatherSummary.isPlaceholder ? .placeholder : [])
+      .swipeActions(edge: SwiftUI.HorizontalEdge.trailing, allowsFullSwipe: true) {
+        Button {
+          self?.delete(itemIdentifier)
+        } label: {
+          Text("Delete")
+        }
+        .tint(.red)
+      }
     }
 
     return cell
@@ -74,34 +68,80 @@ final class FavoritesCollectionViewController: UICollectionViewController {
       UICollectionViewCell.self, forCellWithReuseIdentifier: favoritesCellReuseIdentifier)
   }
 
+  @MainActor
+  private func reloadFavoritesWeather(force: Bool = false) {
+    Task {
+      // Fetch locations
+      let locations = try await viewModel.reloadFavoriteLocations(force: force)
+
+      // Create placeholders
+      let placeholderWeatherWrappers = locations.map { WeatherWrapper(weatherSummary: .placeholder, location: $0) }
+      
+      // Populate placeholders
+      var placeholderSnaphot = NSDiffableDataSourceSnapshot<Int, WeatherWrapper>()
+      placeholderSnaphot.appendSections([0])
+      placeholderSnaphot.appendItems(placeholderWeatherWrappers)
+      await dataSource.apply(placeholderSnaphot)
+      
+      // Fetch weather wrappers
+      let results = await viewModel.refresh(placeholderWeatherWrappers, priority: .utility)
+      
+      var weatherSnapshot = dataSource.snapshot()
+    
+      var itemsToReconfigure: [WeatherWrapper] = []
+      var itemsToDelete: [WeatherWrapper] = []
+      for result in results {
+        switch result {
+        case let .success(wrapper):
+          // Populate placeholders with weather
+          itemsToReconfigure.append(wrapper)
+        case let .failure(OpenWeatherAPIError.cannotProvideForecast(location: location)):
+          // Drop errored items
+          let items = weatherSnapshot.itemIdentifiers.filter { $0.location == location }
+          itemsToDelete.append(contentsOf: items)
+        default:
+          break
+        }
+      }
+      
+      weatherSnapshot.reconfigureItems(itemsToReconfigure)
+      weatherSnapshot.deleteItems(itemsToDelete)
+      
+      await dataSource.apply(weatherSnapshot)
+    }
+  }
+
   override func loadView() {
     self.view = UIView()
-    let collectionView = UICollectionView(
-      frame: .zero, collectionViewLayout: layout)
+    var layoutConfig = UICollectionLayoutListConfiguration(appearance: .plain)
+    layoutConfig.showsSeparators = false
+    let listLayout = UICollectionViewCompositionalLayout.list(using: layoutConfig)
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: listLayout)
     self.collectionView = collectionView
     self.view = collectionView
+  }
+  
+  private var subscriptions = Set<AnyCancellable>()
+  
+  func addAndReloadFavorite(_ location: Location) {
+    // Add placeholder item
+    var placeholderSnapshot = self.dataSource.snapshot()
+    let placeholder = WeatherWrapper(weatherSummary: .placeholder, location: location)
+    placeholderSnapshot.appendItems([placeholder])
+    self.dataSource.apply(placeholderSnapshot, animatingDifferences: true)
+    
+    // Populate placeholder item
+    Task { @MainActor in
+      guard let weatherWrapper = try await self.viewModel.refresh([placeholder], priority: .utility).first?.get() else { return }
+      var snapshot = self.dataSource.snapshot()
+      snapshot.reconfigureItems([weatherWrapper])
+      await self.dataSource.apply(snapshot)
+    }
   }
 
   override func viewDidLoad() {
     super.viewDidLoad()
     registerCells()
-
-    var snaphot = NSDiffableDataSourceSnapshot<Int, WeatherWrapper>()
-    snaphot.appendSections([0])
-    snaphot.appendItems([
-      .init(
-        weatherSummary: .init(
-          date: .now,
-          weatherIconSystemName: "cloud.sun.fill",
-          temperature: .init(value: 20, unit: .celsius),
-          lastUpdate: .now,
-          isPlaceholder: false),
-        location: .init(
-          locality: "Paris",
-          latitude: 0,
-          longitude: 0))
-    ])
-
-    dataSource.apply(snaphot)
+    reloadFavoritesWeather()
   }
 }

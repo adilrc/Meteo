@@ -11,8 +11,13 @@ import Foundation
 import OpenWeather
 
 protocol LocationProviding {
-  func userLocation() async throws -> Location?
+  func userLocation() async throws -> Location
   func isCurrentLocation(_ location: Location) async throws -> Bool
+}
+
+enum LocationAPIError: LocalizedError {
+  case userDenied
+  case locationNotFound
 }
 
 final class LocationAPI: NSObject, LocationProviding {
@@ -22,7 +27,7 @@ final class LocationAPI: NSObject, LocationProviding {
   private var currentLocationPublisher: CurrentValueSubject<CLLocation?, Never> = .init(nil)
   private var subscriptions = Set<AnyCancellable>()
 
-  func userLocation() async throws -> Location? {
+  func userLocation() async throws -> Location {
     locationManager.requestWhenInUseAuthorization()
 
     if CLLocationManager.locationServicesEnabled() {
@@ -47,19 +52,22 @@ final class LocationAPI: NSObject, LocationProviding {
     let geocoder = CLGeocoder()
     let placemarks = try await geocoder.reverseGeocodeLocation(currentLocation)
 
-    guard let locality = placemarks.first?.locality else { return nil }
+    guard
+      let placemark = placemarks.first,
+      let locality = placemark.locality
+    else { throw LocationAPIError.locationNotFound }
 
-    return .init(
-      Location(
-        locality: locality,
-        latitude: currentLocation.coordinate.latitude,
-        longitude: currentLocation.coordinate.longitude))
+    return Location(locality: locality,
+                    latitude: currentLocation.coordinate.latitude,
+                    longitude: currentLocation.coordinate.longitude,
+                    countryCode: placemark.isoCountryCode,
+                    state: placemark.region?.identifier)
   }
 
   func isCurrentLocation(_ location: Location) async throws -> Bool {
     // Differente coordinates can be in the same locality, so we are testing for equality using the
     // locality name here.
-    try await userLocation()?.locality == location.locality
+    try await userLocation().locality == location.locality
   }
 }
 

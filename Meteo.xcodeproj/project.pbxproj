@@ -25,6 +25,7 @@
 		BB32EFFB29181C9D005157CB /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB32EFFA29181C9D005157CB /* Logger.swift */; };
 		BB32EFFD29181D4F005157CB /* ForecastCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB32EFFC29181D4F005157CB /* ForecastCollectionViewController.swift */; };
 		BB32F00129184227005157CB /* OpenWeatherAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB32F00029184227005157CB /* OpenWeatherAPI.swift */; };
+		BB489EFE2919ED74009A51DF /* AddFavoriteSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB489EFD2919ED74009A51DF /* AddFavoriteSheetPresentationController.swift */; };
 		BBDCDCA8291845ED00CAB740 /* LocationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBDCDCA7291845ED00CAB740 /* LocationAPI.swift */; };
 		BBDCDCAA29184A3900CAB740 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBDCDCA929184A3900CAB740 /* Location.swift */; };
 		BBDCDCAC2918587400CAB740 /* WeatherWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBDCDCAB2918587400CAB740 /* WeatherWrapper.swift */; };
@@ -91,6 +92,7 @@
 		BB32EFFA29181C9D005157CB /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		BB32EFFC29181D4F005157CB /* ForecastCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastCollectionViewController.swift; sourceTree = "<group>"; };
 		BB32F00029184227005157CB /* OpenWeatherAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeatherAPI.swift; sourceTree = "<group>"; };
+		BB489EFD2919ED74009A51DF /* AddFavoriteSheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFavoriteSheetPresentationController.swift; sourceTree = "<group>"; };
 		BBDCDCA7291845ED00CAB740 /* LocationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAPI.swift; sourceTree = "<group>"; };
 		BBDCDCA929184A3900CAB740 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		BBDCDCAB2918587400CAB740 /* WeatherWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWrapper.swift; sourceTree = "<group>"; };
@@ -204,7 +206,6 @@
 			children = (
 				BBFC130F2917393300955ABE /* RootViewController.swift */,
 				BBFC12FB29172C8800955ABE /* Tabs */,
-				BBFC12FF29172D5600955ABE /* Settings */,
 				BBFC12FC29172CA900955ABE /* Search */,
 				BBFC130029172DA100955ABE /* Weather */,
 			);
@@ -254,15 +255,9 @@
 			isa = PBXGroup;
 			children = (
 				BBF8098D2918B3D900890A89 /* SearchResultTableViewController.swift */,
+				BB489EFD2919ED74009A51DF /* AddFavoriteSheetPresentationController.swift */,
 			);
 			path = "Search Result";
-			sourceTree = "<group>";
-		};
-		BBFC12FF29172D5600955ABE /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Settings;
 			sourceTree = "<group>";
 		};
 		BBFC130029172DA100955ABE /* Weather */ = {
@@ -512,7 +507,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swift-format >/dev/null; then\n    swift-format format -i -r ${PROJECT_DIR}\n    swift-format lint -r ${PROJECT_DIR}\n    exit 0\nelse\n    echo \"warning: swift-format not installed\"\nfi\n";
+			shellScript = "if which swift-format >/dev/null; then\nexit 0\n    swift-format format -i -r ${PROJECT_DIR}\n    swift-format lint -r ${PROJECT_DIR}\n    exit 0\nelse\n    echo \"warning: swift-format not installed\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -538,6 +533,7 @@
 				BBFC135C29176F5600955ABE /* WeatherContainerViewController.swift in Sources */,
 				BBEE55322918E35900977081 /* SearchContainerViewController.swift in Sources */,
 				BB1EFC462918A10800F68C7F /* SwiftUI+ShapeStyle.swift in Sources */,
+				BB489EFE2919ED74009A51DF /* AddFavoriteSheetPresentationController.swift in Sources */,
 				BBF8098E2918B3D900890A89 /* SearchResultTableViewController.swift in Sources */,
 				BBDCDCAA29184A3900CAB740 /* Location.swift in Sources */,
 				BBFC131229173A3800955ABE /* WeatherTabViewController.swift in Sources */,

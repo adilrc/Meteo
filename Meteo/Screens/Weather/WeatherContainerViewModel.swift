@@ -42,8 +42,9 @@ final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType {
     if let selectedLocation {
       // User has already selected a location
       return selectedLocation
-    } else if let userLocation = try await locAPI.userLocation() {
+    } else if var userLocation = try? await locAPI.userLocation() {
       // No selected locations set yet, use user location.
+      userLocation.setAsCurrentLocation()
       return userLocation
     } else {
       // Fallbacks  to a default location if user doesn't provides location

@@ -50,6 +50,7 @@ extension WeatherSummary {
       date: .now,
       weatherIconSystemName: "sun.max.fill",
       temperature: .init(value: 20, unit: .celsius),
+      timeZone: .init(abbreviation: "GMT"),
       lastUpdate: .now,
       isPlaceholder: true)
   }

@@ -7,7 +7,18 @@
 
 import Foundation
 
-struct WeatherWrapper: Hashable {
-  let weatherSummary: WeatherSummary
+final class WeatherWrapper: NSObject {
+  var weatherSummary: WeatherSummary
   let location: Location
+  
+  init(weatherSummary: WeatherSummary, location: Location) {
+    self.weatherSummary = weatherSummary
+    self.location = location
+  }
+}
+
+extension WeatherWrapper {
+  static let parisWeather: WeatherWrapper = .init(weatherSummary: .placeholder, location: .paris)
+  static let londonWeather: WeatherWrapper = .init(weatherSummary: .placeholder, location: .london)
+  static let sanDiegoWeather: WeatherWrapper = .init(weatherSummary: .placeholder, location: .sanDiego)
 }

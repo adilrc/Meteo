@@ -14,6 +14,11 @@ protocol OpenWeatherAPIWeatherProviding {
   func search(_ input: String) async throws -> Set<Location>
 }
 
+enum OpenWeatherAPIError: LocalizedError {
+  case cannotProvideWeather(location: Location)
+  case cannotProvideForecast(location: Location)
+}
+
 final actor OpenWeatherAPI: OpenWeatherAPIWeatherProviding {
 
   static let shared = OpenWeatherAPI()
@@ -24,18 +29,28 @@ final actor OpenWeatherAPI: OpenWeatherAPIWeatherProviding {
 
   func weatherSummary(for location: Location) async throws -> WeatherSummary {
     let (latitude, longitude) = (location.latitude, location.longitude)
-    let response = try await openWeather.weather(
-      coordinates: .init(latitude: latitude, longitude: longitude))
-
-    return WeatherSummary.make(from: response)
+    do {
+      let response = try await openWeather.weather(coordinates: .init(latitude: latitude, longitude: longitude))
+      
+      return WeatherSummary.make(from: response)
+    } catch {
+      logger.error("􀁟 \(error.localizedDescription)")
+      throw OpenWeatherAPIError.cannotProvideWeather(location: location)
+    }
   }
-
+  
   func forecast(for location: Location) async throws -> WeatherForecast {
     let (latitude, longitude) = (location.latitude, location.longitude)
-    let response = try await openWeather.fiveDayforecast(
-      coordinates: .init(latitude: latitude, longitude: longitude))
-
-    return WeatherForecast.make(from: response)
+    
+    do {
+      let response = try await openWeather.fiveDayforecast(
+        coordinates: .init(latitude: latitude, longitude: longitude))
+      
+      return WeatherForecast.make(from: response)
+    } catch {
+      logger.error("􀁟 \(error.localizedDescription)")
+      throw OpenWeatherAPIError.cannotProvideForecast(location: location)
+    }
   }
 
   func search(_ input: String) async throws -> Set<Location> {

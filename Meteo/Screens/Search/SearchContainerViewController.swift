@@ -7,11 +7,11 @@
 
 import UIKit
 
-final class SearchContainerViewController: UIViewController {
+final class SearchContainerViewController<ViewModel: SearchContainerViewModelType>: UIViewController {
 
-  private let viewModel: SearchContainerViewModelType
+  private let viewModel: ViewModel
 
-  init(viewModel: SearchContainerViewModelType) {
+  init(viewModel: ViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
@@ -40,7 +40,7 @@ final class SearchContainerViewController: UIViewController {
     return largeTitle
   }()
 
-  private lazy var favoritesCollectionViewController = FavoritesCollectionViewController(
+  private(set) lazy var favoritesCollectionViewController = FavoritesCollectionViewController<ViewModel>(
     viewModel: viewModel)
 
   private func setupViewHierarchy() {
@@ -55,11 +55,11 @@ final class SearchContainerViewController: UIViewController {
 
     containerStackView.addArrangedSubview(favoritesCollectionViewController.view)
     favoritesCollectionViewController.view.leadingAnchor.constraint(
-      equalTo: view.layoutMarginsGuide.leadingAnchor
+      equalTo: containerStackView.leadingAnchor
     )
     .tagAndActivate()
     favoritesCollectionViewController.view.trailingAnchor.constraint(
-      equalTo: view.layoutMarginsGuide.trailingAnchor
+      equalTo: containerStackView.trailingAnchor
     )
     .tagAndActivate()
   }
