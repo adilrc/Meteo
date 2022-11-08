@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FavoriteTileView: View {
-  
+
   private var isCurrentLocation: Bool
   private var locality: String
   private var dateStringAtLocation: String
@@ -16,8 +16,11 @@ struct FavoriteTileView: View {
   private var description: String
   private var temperature: Measurement<UnitTemperature>
   private var isPlaceholder: Bool
-  
-  init(isCurrentLocation: Bool, locality: String, dateStringAtLocation: String, weatherIconSystemName: String, description: String, temperature: Measurement<UnitTemperature>, isPlaceholder: Bool) {
+
+  init(
+    isCurrentLocation: Bool, locality: String, dateStringAtLocation: String, weatherIconSystemName: String, description: String,
+    temperature: Measurement<UnitTemperature>, isPlaceholder: Bool
+  ) {
     self.isCurrentLocation = isCurrentLocation
     self.locality = locality
     self.dateStringAtLocation = dateStringAtLocation
@@ -26,13 +29,13 @@ struct FavoriteTileView: View {
     self.temperature = temperature
     self.isPlaceholder = isPlaceholder
   }
-  
+
   private static let dateFormatter: DateFormatter = {
     let dateFormatter = DateFormatter()
     dateFormatter.setLocalizedDateFormatFromTemplate("E")
     return dateFormatter
   }()
-  
+
   var body: some View {
     GroupBox {
       HStack(spacing: 20) {
@@ -70,16 +73,17 @@ struct FavoriteTileView: View {
 }
 
 #if DEBUG
-struct FavoriteTileView_Previews: PreviewProvider {
-  static var previews: some View {
-    FavoriteTileView(
-      isCurrentLocation: true,
-      locality: "London",
-      dateStringAtLocation: "4:44 AM",
-      weatherIconSystemName: "cloud.sun.fill",
-      description: "overcastsclouds",
-      temperature: .init(value: 20, unit: .celsius),
-      isPlaceholder: false).frame(width: 350)
+  struct FavoriteTileView_Previews: PreviewProvider {
+    static var previews: some View {
+      FavoriteTileView(
+        isCurrentLocation: true,
+        locality: "London",
+        dateStringAtLocation: "4:44 AM",
+        weatherIconSystemName: "cloud.sun.fill",
+        description: "overcastsclouds",
+        temperature: .init(value: 20, unit: .celsius),
+        isPlaceholder: false
+      ).frame(width: 350)
+    }
   }
-}
 #endif

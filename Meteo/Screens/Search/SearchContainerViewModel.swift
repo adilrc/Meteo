@@ -11,28 +11,28 @@ import Foundation
 protocol SearchContainerViewModelType {
   func reloadFavoriteLocations(force: Bool) async throws -> [Location]
   func refresh(_ weatherWrappers: [WeatherWrapper], priority: TaskPriority) async -> [Result<WeatherWrapper, Error>]
-  
+
   func addFavorite(_ location: Location)
   func removeFavorite(_ location: Location)
-  
+
   static func timeLabel(for weatherSummary: WeatherSummary) -> String
 }
 
 final class SearchContainerViewModel: SearchContainerViewModelType {
-  
+
   private let locationAPI: LocationProviding
   private let weatherAPI: OpenWeatherAPIWeatherProviding
-  
+
   init(locationAPI: LocationProviding = LocationAPI.shared, weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared) {
     self.locationAPI = locationAPI
     self.weatherAPI = weatherAPI
   }
-  
+
   func reloadFavoriteLocations(force: Bool) async throws -> [Location] {
     var locations: [Location] = []
-    
+
     let favoriteLocations = FavoritesStore.favorites()?.locations ?? []
-    
+
     // 1. First favorite is the user location if user accepted to provide location data.
     do {
       var location = try await locationAPI.userLocation()
@@ -43,7 +43,7 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
     } catch {
       throw error
     }
-    
+
     // 2. The rest of the favorites are the actual user defined favs
     // If no favorites (e.g. first setup) add a default set of favorites and add them to the store.
     if favoriteLocations.isEmpty {
@@ -53,14 +53,14 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
     } else {
       locations.append(contentsOf: favoriteLocations)
     }
-    
+
     return locations
   }
-  
+
   func refresh(_ weatherWrappers: [WeatherWrapper], priority: TaskPriority) async -> [Result<WeatherWrapper, Error>] {
     await withTaskGroup(of: Result<WeatherWrapper, Error>.self) { [unowned self] taskGroup in
       var results = [Result<WeatherWrapper, Error>]()
-      
+
       for wrapper in weatherWrappers {
         taskGroup.addTask(priority: priority) {
           do {
@@ -72,18 +72,20 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
           }
         }
       }
-      
+
       for await result in taskGroup {
         results.append(result)
       }
-      
+
       return results
     }
   }
-  
-  func reloadFavoritesWeather(locAPI: LocationProviding = LocationAPI.shared,
-                              weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared,
-                              force: Bool = false) async throws -> [WeatherWrapper] {
+
+  func reloadFavoritesWeather(
+    locAPI: LocationProviding = LocationAPI.shared,
+    weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared,
+    force: Bool = false
+  ) async throws -> [WeatherWrapper] {
     //    let favoriteLocations = FavoritesStore.favorites()?.locations
     return [.parisWeather, .londonWeather, .sanDiegoWeather]
   }
@@ -98,18 +100,18 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
     logger.debug("􀐫 Time label: \(output)")
     return output
   }
-  
+
   func addFavorite(_ location: Location) {
     let currentFavorites = FavoritesStore.favorites()?.locations ?? []
     logger.info("􀋃 Adding \(location.description) to user favorites.")
-    
+
     FavoritesStore.store(.init(locations: currentFavorites + [location]))
   }
-  
+
   func removeFavorite(_ location: Location) {
     guard let currentFavorites = FavoritesStore.favorites()?.locations else { return }
     logger.info("􀋃 Removing \(location.description) from user favorites.")
-    
+
     let filteredFavorites = currentFavorites.filter { $0 != location }
     FavoritesStore.store(.init(locations: filteredFavorites))
   }

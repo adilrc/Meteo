@@ -24,7 +24,7 @@ final class SearchResultTableViewController<ViewModel: SearchContainerViewModelT
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   private lazy var dataSource: UITableViewDiffableDataSource<Int, Location> = .init(
     tableView: tableView
   ) { tableView, indexPath, itemIdentifier in
@@ -83,7 +83,7 @@ final class SearchResultTableViewController<ViewModel: SearchContainerViewModelT
     registerCells()
     listenSearchBarChange()
   }
-  
+
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let location = dataSource.snapshot().itemIdentifiers[indexPath.item]
     parentController?.openFavoriteSheet(location)

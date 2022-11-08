@@ -57,11 +57,12 @@ final class LocationAPI: NSObject, LocationProviding {
       let locality = placemark.locality
     else { throw LocationAPIError.locationNotFound }
 
-    return Location(locality: locality,
-                    latitude: currentLocation.coordinate.latitude,
-                    longitude: currentLocation.coordinate.longitude,
-                    countryCode: placemark.isoCountryCode,
-                    state: placemark.region?.identifier)
+    return Location(
+      locality: locality,
+      latitude: currentLocation.coordinate.latitude,
+      longitude: currentLocation.coordinate.longitude,
+      countryCode: placemark.isoCountryCode,
+      state: placemark.region?.identifier)
   }
 
   func isCurrentLocation(_ location: Location) async throws -> Bool {

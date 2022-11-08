@@ -17,7 +17,7 @@ final class SearchTabViewController: UIViewController {
   }
 
   private lazy var viewModel = SearchContainerViewModel()
-  
+
   private lazy var searchResultViewController = SearchResultTableViewController(viewModel: viewModel)
 
   lazy var searchController = UISearchController(
@@ -33,7 +33,7 @@ final class SearchTabViewController: UIViewController {
     sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
     present(sheetViewController, animated: false)
   }
-  
+
   private func setupSearchController() {
     searchResultViewController.parentController = self
     navigationItem.searchController = searchController
@@ -50,7 +50,9 @@ final class SearchTabViewController: UIViewController {
 }
 
 extension SearchTabViewController: AddFavoriteSheetPresentationControllerDelegate {
-  func addFavoriteSheet<ViewModel: WeatherContainerViewModelType>(_ controller: AddFavoriteSheetPresentationController<ViewModel>, didAdd location: Location) {
+  func addFavoriteSheet<ViewModel: WeatherContainerViewModelType>(
+    _ controller: AddFavoriteSheetPresentationController<ViewModel>, didAdd location: Location
+  ) {
     searchController.isActive = false
     viewModel.addFavorite(location)
     searchContainerViewController.favoritesCollectionViewController.addAndReloadFavorite(location)
