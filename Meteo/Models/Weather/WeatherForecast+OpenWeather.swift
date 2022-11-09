@@ -24,13 +24,13 @@ extension WeatherForecast {
     /// Convenience method to only keep on weather summary per day.
     /// This summary is picked up between 10 a.m. and 1 p.m.
     /// - Returns: New forecast with a daily weather summary
-    func keepingDailySummary() -> Self {
+    func keepingDailySummary(from date: Date) -> Self {
         let summaries = self.weatherSummaries.filter {
             var calendar = Calendar.current
             calendar.timeZone = $0.timeZone ?? .current
 
             // 1. Remove today's forecasts
-            let isNotToday: Bool = !calendar.isDateInToday($0.date)
+            let isNotToday: Bool = !calendar.isDate($0.date, inSameDayAs: date)
 
             // 2. Use only values between 10 a.m. and 13 p.m.
             // Assuming the API is correct, there should only be one value per day in this range.

@@ -93,10 +93,7 @@ final class ForecastCollectionViewController<ViewModel: WeatherContainerViewMode
             guard
                 let forecast =
                     try await viewModel
-                    .reloadForecast(
-                        locAPI: LocationAPI.shared,
-                        weatherAPI: OpenWeatherAPI.shared,
-                        force: false)
+                    .reloadForecast(force: false, from: .now)
             else { return }
 
             var snapshot = NSDiffableDataSourceSnapshot<Int, WeatherSummary?>()

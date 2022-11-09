@@ -31,10 +31,7 @@ struct WeatherSummaryView<ViewModel: WeatherContainerViewModelType>: View {
         }
         .task {
             do {
-                _ = try await viewModel.reloadWeatherSummary(
-                    locAPI: LocationAPI.shared,
-                    weatherAPI: OpenWeatherAPI.shared,
-                    force: false)
+                _ = try await viewModel.reloadWeatherSummary(force: false)
             } catch {
                 logger.error("\(error.localizedDescription)")
             }

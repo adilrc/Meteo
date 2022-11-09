@@ -53,3 +53,19 @@ final class CLPlacemarkMock: MKPlacemark {
             ])
     }
 }
+
+final class LocationAPIMock: LocationProviding {
+    var userLocation: Location?
+    
+    init(userLocation: Location?) {
+        self.userLocation = userLocation
+    }
+    
+    func userLocation() async throws -> Location {
+        return try userLocation ?? { throw LocationAPIError.userDenied }()
+    }
+    
+    func isCurrentLocation(_ location: Location) async throws -> Bool {
+        return location == userLocation
+    }
+}

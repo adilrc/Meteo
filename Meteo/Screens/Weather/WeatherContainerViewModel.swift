@@ -14,16 +14,14 @@ protocol WeatherContainerViewModelType: NSObjectProtocol, ObservableObject {
     var weatherWrapper: WeatherWrapper? { get set }
     var weatherWrapperPublisher: Published<WeatherWrapper?>.Publisher { get }
 
-    func reloadWeatherSummary(
-        locAPI: LocationProviding, weatherAPI: OpenWeatherAPIWeatherProviding, force: Bool
-    ) async throws -> WeatherWrapper?
-    func reloadForecast(
-        locAPI: LocationProviding, weatherAPI: OpenWeatherAPIWeatherProviding, force: Bool
-    ) async throws -> WeatherForecast?
+    func reloadWeatherSummary(force: Bool) async throws -> WeatherWrapper?
+    func reloadForecast(force: Bool, from date: Date) async throws -> WeatherForecast?
 }
 
 final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType {
 
+    let locationAPI: LocationProviding
+    let weatherAPI: OpenWeatherAPIWeatherProviding
     private(set) var selectedLocation: Location?
     private var subscriptions = Set<AnyCancellable>()
 
@@ -38,7 +36,11 @@ final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType {
             .store(in: &subscriptions)
     }
 
-    init(selectedLocation: Location? = nil) {
+    init(selectedLocation: Location? = nil,
+         locationAPI: LocationProviding = LocationAPI.shared,
+         weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared) {
+        self.locationAPI = locationAPI
+        self.weatherAPI = weatherAPI
         self.selectedLocation = selectedLocation
         super.init()
         setupListeners()
@@ -49,15 +51,13 @@ final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType {
         return Date.now.timeIntervalSince(weatherWrapper.weatherSummary.lastUpdate) > 60 * 10
     }
 
-    private func currentLocation(
-        _ locAPI: LocationProviding = LocationAPI.shared
-    ) async throws
+    private func currentLocation() async throws
         -> Location
     {
         if let selectedLocation {
             // User has already selected a location
             return selectedLocation
-        } else if var userLocation = try? await locAPI.userLocation() {
+        } else if var userLocation = try? await locationAPI.userLocation() {
             // No selected locations set yet, use user location.
             userLocation.setAsCurrentLocation()
             return userLocation
@@ -68,14 +68,10 @@ final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType {
     }
 
     @MainActor @discardableResult
-    func reloadWeatherSummary(
-        locAPI: LocationProviding = LocationAPI.shared,
-        weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared,
-        force: Bool = false
-    ) async throws -> WeatherWrapper? {
+    func reloadWeatherSummary(force: Bool = false) async throws -> WeatherWrapper? {
         guard lastRequestOlderThanTenMinutes || force else { return nil }
 
-        let location = try await currentLocation(locAPI)
+        let location = try await currentLocation()
         logger.info("􀇕 Reloading weather summary for location: \(location.locality).")
         let weatherSummary = try await weatherAPI.weatherSummary(for: location)
 
@@ -88,14 +84,12 @@ final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType {
     var weatherWrapperPublisher: Published<WeatherWrapper?>.Publisher { $weatherWrapper }
 
     @MainActor @discardableResult
-    func reloadForecast(
-        locAPI: LocationProviding, weatherAPI: OpenWeatherAPIWeatherProviding, force: Bool
-    ) async throws -> WeatherForecast? {
+    func reloadForecast(force: Bool, from date: Date = .now) async throws -> WeatherForecast? {
         guard lastRequestOlderThanTenMinutes || force else { return nil }
 
-        let location = try await currentLocation(locAPI)
+        let location = try await currentLocation()
         logger.info("􀇕 Reloading weather forecast for location: \(location.locality).")
-        let forecast = try await weatherAPI.forecast(for: location).keepingDailySummary()
+        let forecast = try await weatherAPI.forecast(for: location).keepingDailySummary(from: date)
 
         return forecast
     }

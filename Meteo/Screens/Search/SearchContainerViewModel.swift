@@ -20,10 +20,14 @@ protocol SearchContainerViewModelType {
 
 final class SearchContainerViewModel: SearchContainerViewModelType {
 
+    private let userDefaults: UserDefaults
     private let locationAPI: LocationProviding
     private let weatherAPI: OpenWeatherAPIWeatherProviding
 
-    init(locationAPI: LocationProviding = LocationAPI.shared, weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared) {
+    init(userDefaults: UserDefaults = UserDefaults.standard,
+         locationAPI: LocationProviding = LocationAPI.shared,
+         weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared) {
+        self.userDefaults = userDefaults
         self.locationAPI = locationAPI
         self.weatherAPI = weatherAPI
     }
@@ -31,7 +35,7 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
     func reloadFavoriteLocations() async throws -> [Location] {
         var locations: [Location] = []
 
-        let favoriteLocations = FavoritesStore.favorites()?.locations ?? []
+        let favoriteLocations = FavoritesStore.favorites(userDefault: userDefaults)?.locations ?? []
 
         // 1. First favorite is the user location if user accepted to provide location data.
         do {
@@ -46,7 +50,7 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
 
         // 2. The rest of the favorites are the actual user defined favs
         // If no favorites (e.g. first setup) add a default set of favorites and add them to the store.
-        if favoriteLocations.isEmpty {
+        if locations.isEmpty {
             let defaultFavorites: [Location] = [.sanDiego, .london, .paris]
             FavoritesStore.store(.init(locations: defaultFavorites))
             locations.append(contentsOf: defaultFavorites)
