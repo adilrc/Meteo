@@ -104,7 +104,6 @@ final class LocationAPI: NSObject, LocationProviding {
         self.fetchingLocationTask = task
         defer {
             fetchingLocationTask = nil
-            //            currentLocationPublisher.value = nil
         }
 
         return try await task.value
