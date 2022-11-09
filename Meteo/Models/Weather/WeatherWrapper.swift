@@ -9,7 +9,7 @@ import Foundation
 
 final class WeatherWrapper: NSObject {
     var weatherSummary: WeatherSummary
-    let location: Location
+    var location: Location
 
     init(weatherSummary: WeatherSummary, location: Location) {
         self.weatherSummary = weatherSummary

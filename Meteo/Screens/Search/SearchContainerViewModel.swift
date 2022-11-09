@@ -58,10 +58,15 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
     }
 
     func refresh(_ weatherWrappers: [WeatherWrapper], force: Bool, priority: TaskPriority) async -> [Result<WeatherWrapper, Error>]? {
-        guard let wrapper = weatherWrappers.first else { return nil }
+        guard let firstWrapper = weatherWrappers.first else { return nil }
 
-        var isFirstRequest: Bool { wrapper.weatherSummary.isPlaceholder }
-        var lastRequestOlderThanTenMinutes: Bool { Date.now.timeIntervalSince(wrapper.weatherSummary.lastUpdate) > 60 * 10 }
+        if let newLocation = try? await locationAPI.userLocation(), newLocation != firstWrapper.location {
+            // If the location changed replace the location of the first wrapper
+            firstWrapper.location = newLocation
+        }
+
+        var isFirstRequest: Bool { firstWrapper.weatherSummary.isPlaceholder }
+        var lastRequestOlderThanTenMinutes: Bool { Date.now.timeIntervalSince(firstWrapper.weatherSummary.lastUpdate) > 60 * 10 }
 
         guard isFirstRequest || lastRequestOlderThanTenMinutes || force else { return nil }
 
@@ -86,15 +91,6 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
 
             return results
         }
-    }
-
-    func reloadFavoritesWeather(
-        locAPI: LocationProviding = LocationAPI.shared,
-        weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared,
-        force: Bool = false
-    ) async throws -> [WeatherWrapper] {
-        //    let favoriteLocations = FavoritesStore.favorites()?.locations
-        return [.parisWeather, .londonWeather, .sanDiegoWeather]
     }
 
     static func timeLabel(for weatherSummary: WeatherSummary) -> String {
