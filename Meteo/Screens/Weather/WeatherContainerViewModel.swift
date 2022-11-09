@@ -36,9 +36,11 @@ final class WeatherContainerViewModel: NSObject, WeatherContainerViewModelType {
             .store(in: &subscriptions)
     }
 
-    init(selectedLocation: Location? = nil,
-         locationAPI: LocationProviding = LocationAPI.shared,
-         weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared) {
+    init(
+        selectedLocation: Location? = nil,
+        locationAPI: LocationProviding = LocationAPI.shared,
+        weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared
+    ) {
         self.locationAPI = locationAPI
         self.weatherAPI = weatherAPI
         self.selectedLocation = selectedLocation

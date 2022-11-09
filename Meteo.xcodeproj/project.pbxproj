@@ -434,7 +434,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BB0546AC29171D5A00B1C64E /* Build configuration list for PBXNativeTarget "Meteo" */;
 			buildPhases = (
-				BB0546B529171DC700B1C64E /* Run swift-format */,
 				BB05467E29171D5900B1C64E /* Sources */,
 				BB05467F29171D5900B1C64E /* Frameworks */,
 				BB05468029171D5900B1C64E /* Resources */,
@@ -528,28 +527,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		BB0546B529171DC700B1C64E /* Run swift-format */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run swift-format";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which swift-format >/dev/null; then\n    exit 0\n    swift-format format -i -r ${PROJECT_DIR}\n    swift-format lint -r ${PROJECT_DIR}\n    exit 0\nelse\n    echo \"warning: swift-format not installed\"\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BB05467E29171D5900B1C64E /* Sources */ = {

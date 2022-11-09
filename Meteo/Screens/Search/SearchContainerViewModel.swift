@@ -24,9 +24,11 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
     private let locationAPI: LocationProviding
     private let weatherAPI: OpenWeatherAPIWeatherProviding
 
-    init(userDefaults: UserDefaults = UserDefaults.standard,
-         locationAPI: LocationProviding = LocationAPI.shared,
-         weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared) {
+    init(
+        userDefaults: UserDefaults = UserDefaults.standard,
+        locationAPI: LocationProviding = LocationAPI.shared,
+        weatherAPI: OpenWeatherAPIWeatherProviding = OpenWeatherAPI.shared
+    ) {
         self.userDefaults = userDefaults
         self.locationAPI = locationAPI
         self.weatherAPI = weatherAPI
@@ -65,8 +67,9 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
         guard let firstWrapper = weatherWrappers.first else { return nil }
 
         if let newLocation = try? await locationAPI.userLocation(),
-           let userLocationWrapper = weatherWrappers.first(where: \.location.isCurrentLocation),
-            newLocation != userLocationWrapper.location {
+            let userLocationWrapper = weatherWrappers.first(where: \.location.isCurrentLocation),
+            newLocation != userLocationWrapper.location
+        {
             // If the location changed replace the location of the first wrapper
             userLocationWrapper.location = newLocation
         }
