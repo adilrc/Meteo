@@ -64,9 +64,11 @@ final class SearchContainerViewModel: SearchContainerViewModelType {
     func refresh(_ weatherWrappers: [WeatherWrapper], force: Bool, priority: TaskPriority) async -> [Result<WeatherWrapper, Error>]? {
         guard let firstWrapper = weatherWrappers.first else { return nil }
 
-        if let newLocation = try? await locationAPI.userLocation(), newLocation != firstWrapper.location {
+        if let newLocation = try? await locationAPI.userLocation(),
+           let userLocationWrapper = weatherWrappers.first(where: \.location.isCurrentLocation),
+            newLocation != userLocationWrapper.location {
             // If the location changed replace the location of the first wrapper
-            firstWrapper.location = newLocation
+            userLocationWrapper.location = newLocation
         }
 
         var isFirstRequest: Bool { firstWrapper.weatherSummary.isPlaceholder }
