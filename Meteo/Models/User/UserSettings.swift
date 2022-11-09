@@ -8,5 +8,5 @@
 import Foundation
 
 struct UserSettings {
-  var degreesUnit: UnitTemperature = .init(forLocale: Locale.current)
+    var degreesUnit: UnitTemperature = .init(forLocale: Locale.current)
 }

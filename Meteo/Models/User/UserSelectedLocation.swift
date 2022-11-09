@@ -8,9 +8,9 @@
 import Foundation
 
 extension Notification.Name {
-  static let userDidSelectLocation: Self = .init("UserDidSelectLocation")
+    static let userDidSelectLocation: Self = .init("UserDidSelectLocation")
 }
 
 enum UserSelectedLocation {
-  static let key = "userSelectedLocationKey"
+    static let key = "userSelectedLocationKey"
 }

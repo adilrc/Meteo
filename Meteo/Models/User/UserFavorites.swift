@@ -8,12 +8,12 @@
 import Foundation
 
 struct UserFavorites: Codable, Hashable {
-  let locations: [Location]
+    let locations: [Location]
 }
 
 extension UserFavorites: CustomStringConvertible {
-  var description: String {
-    let locationsList = locations.map { "\t- \($0.locality)\n" }.joined()
-    return "Locations:\n" + locationsList
-  }
+    var description: String {
+        let locationsList = locations.map { "\t- \($0.locality)\n" }.joined()
+        return "Locations:\n" + locationsList
+    }
 }

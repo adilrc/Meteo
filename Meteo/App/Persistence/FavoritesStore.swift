@@ -8,22 +8,22 @@
 import Foundation
 
 enum FavoritesStore {
-  static let jsonEncoder = JSONEncoder()
-  static let jsonDecoder = JSONDecoder()
+    static let jsonEncoder = JSONEncoder()
+    static let jsonDecoder = JSONDecoder()
 
-  static func store(_ favorites: UserFavorites) {
-    logger.info("􀋃 Storing favorites:\n \(favorites.description)")
-    let data = try? jsonEncoder.encode(favorites)
-    UserDefaults.standard.set(data, forKey: String(describing: UserFavorites.self))
-  }
+    static func store(_ favorites: UserFavorites, userDefault: UserDefaults = UserDefaults.standard) {
+        logger.info("􀋃 Storing favorites:\n \(favorites.description)")
+        let data = try? jsonEncoder.encode(favorites)
+        UserDefaults.standard.set(data, forKey: String(describing: UserFavorites.self))
+    }
 
-  static func favorites() -> UserFavorites? {
-    guard
-      let data = UserDefaults.standard.data(forKey: String(describing: UserFavorites.self)),
-      let favorites = try? jsonDecoder.decode(UserFavorites.self, from: data)
-    else { return nil }
+    static func favorites(userDefault: UserDefaults = UserDefaults.standard) -> UserFavorites? {
+        guard
+            let data = UserDefaults.standard.data(forKey: String(describing: UserFavorites.self)),
+            let favorites = try? jsonDecoder.decode(UserFavorites.self, from: data)
+        else { return nil }
 
-    logger.info("􀋃 Pulling user favorites:\n \(favorites.description)")
-    return favorites
-  }
+        logger.info("􀋃 Pulling user favorites:\n \(favorites.description)")
+        return favorites
+    }
 }

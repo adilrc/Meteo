@@ -11,42 +11,42 @@ import UIKit
 /// The root view controller is a tab bar controller.
 final class RootViewController: UITabBarController {
 
-  private func setupTabBar() {
-    delegate = self
-    viewControllers = AppTab.allCases.map {
-      let rootViewController = $0.makeRootViewController()
+    private func setupTabBar() {
+        delegate = self
+        viewControllers = AppTab.allCases.map {
+            let rootViewController = $0.makeRootViewController()
 
-      let navigationViewController = UINavigationController(rootViewController: rootViewController)
+            let navigationViewController = UINavigationController(rootViewController: rootViewController)
 
-      navigationViewController.tabBarItem.title = $0.title
-      navigationViewController.tabBarItem.image = $0.image
+            navigationViewController.tabBarItem.title = $0.title
+            navigationViewController.tabBarItem.image = $0.image
 
-      return navigationViewController
+            return navigationViewController
+        }
     }
-  }
 
-  private var subscriptions = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
-  private func setupListeners() {
-    NotificationCenter.default.publisher(for: .userDidSelectLocation)
-      .sink { [weak self] _ in
-        self?.selectedIndex = 0
-      }
-      .store(in: &subscriptions)
-  }
+    private func setupListeners() {
+        NotificationCenter.default.publisher(for: .userDidSelectLocation)
+            .sink { [weak self] _ in
+                self?.selectedIndex = 0
+            }
+            .store(in: &subscriptions)
+    }
 
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setupTabBar()
-    setupListeners()
-  }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupTabBar()
+        setupListeners()
+    }
 }
 
 extension RootViewController: UITabBarControllerDelegate {
-  func tabBarController(
-    _ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController
-  ) -> UIViewControllerAnimatedTransitioning? {
-    UIView.transition(from: fromVC.view, to: toVC.view, duration: 0.4, options: [.transitionCrossDissolve], completion: nil)
-    return nil
-  }
+    func tabBarController(
+        _ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController
+    ) -> UIViewControllerAnimatedTransitioning? {
+        UIView.transition(from: fromVC.view, to: toVC.view, duration: 0.4, options: [.transitionCrossDissolve], completion: nil)
+        return nil
+    }
 }

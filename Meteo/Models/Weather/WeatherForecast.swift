@@ -8,5 +8,5 @@
 import Foundation
 
 struct WeatherForecast: Hashable {
-  var weatherSummaries: [WeatherSummary]
+    var weatherSummaries: [WeatherSummary]
 }

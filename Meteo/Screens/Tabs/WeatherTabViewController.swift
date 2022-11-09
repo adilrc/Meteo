@@ -8,13 +8,13 @@
 import UIKit
 
 final class WeatherTabViewController: UIViewController {
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    view.backgroundColor = .systemBackground
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
 
-    let viewController = WeatherContainerViewController(viewModel: WeatherContainerViewModel())
-    addChild(viewController)
-    view.addSubview(viewController.view)
-    viewController.view.createConstraintsToFitInside(view)
-  }
+        let viewController = WeatherContainerViewController(viewModel: WeatherContainerViewModel())
+        addChild(viewController)
+        view.addSubview(viewController.view)
+        viewController.view.createConstraintsToFitInside(view)
+    }
 }
