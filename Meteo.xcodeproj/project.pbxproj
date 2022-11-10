@@ -26,6 +26,7 @@
 		BB32EFFB29181C9D005157CB /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB32EFFA29181C9D005157CB /* Logger.swift */; };
 		BB32EFFD29181D4F005157CB /* ForecastCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB32EFFC29181D4F005157CB /* ForecastCollectionViewController.swift */; };
 		BB32F00129184227005157CB /* OpenWeatherAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB32F00029184227005157CB /* OpenWeatherAPI.swift */; };
+		BB3C2CFB291CA2B600AB209E /* OpenWeather in Frameworks */ = {isa = PBXBuildFile; productRef = BB3C2CFA291CA2B600AB209E /* OpenWeather */; };
 		BB489EFE2919ED74009A51DF /* AddFavoriteSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB489EFD2919ED74009A51DF /* AddFavoriteSheetPresentationController.swift */; };
 		BB615EEC291AF9A60001C283 /* FavoritesStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB615EEB291AF9A60001C283 /* FavoritesStoreTests.swift */; };
 		BB615EEF291AFB750001C283 /* OpenWeatherAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB615EEE291AFB750001C283 /* OpenWeatherAPITests.swift */; };
@@ -34,7 +35,6 @@
 		BB615EF6291B11CD0001C283 /* LocationMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB615EF5291B11CD0001C283 /* LocationMocks.swift */; };
 		BB615EF9291B283F0001C283 /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB615EF8291B283F0001C283 /* Geocoder.swift */; };
 		BB615EFB291B28540001C283 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB615EFA291B28540001C283 /* LocationManager.swift */; };
-		BBA5C987291AB1D30028B8EA /* OpenWeather in Frameworks */ = {isa = PBXBuildFile; productRef = BBA5C986291AB1D30028B8EA /* OpenWeather */; };
 		BBDCDCA8291845ED00CAB740 /* LocationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBDCDCA7291845ED00CAB740 /* LocationAPI.swift */; };
 		BBDCDCAA29184A3900CAB740 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBDCDCA929184A3900CAB740 /* Location.swift */; };
 		BBDCDCAC2918587400CAB740 /* WeatherWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBDCDCAB2918587400CAB740 /* WeatherWrapper.swift */; };
@@ -100,7 +100,6 @@
 		BB615EF5291B11CD0001C283 /* LocationMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMocks.swift; sourceTree = "<group>"; };
 		BB615EF8291B283F0001C283 /* Geocoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geocoder.swift; sourceTree = "<group>"; };
 		BB615EFA291B28540001C283 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		BBA5C985291AB1BB0028B8EA /* openweather-swift-sdk */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "openweather-swift-sdk"; path = "../openweather-swift-sdk"; sourceTree = "<group>"; };
 		BBDCDCA7291845ED00CAB740 /* LocationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAPI.swift; sourceTree = "<group>"; };
 		BBDCDCA929184A3900CAB740 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		BBDCDCAB2918587400CAB740 /* WeatherWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWrapper.swift; sourceTree = "<group>"; };
@@ -130,7 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BBA5C987291AB1D30028B8EA /* OpenWeather in Frameworks */,
+				BB3C2CFB291CA2B600AB209E /* OpenWeather in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,7 +149,6 @@
 				BB05468429171D5900B1C64E /* Meteo */,
 				BB05469B29171D5A00B1C64E /* MeteoTests */,
 				BB05468329171D5900B1C64E /* Products */,
-				BBA5C984291AB1BB0028B8EA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -262,14 +260,6 @@
 				BB615EFA291B28540001C283 /* LocationManager.swift */,
 			);
 			path = Location;
-			sourceTree = "<group>";
-		};
-		BBA5C984291AB1BB0028B8EA /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				BBA5C985291AB1BB0028B8EA /* openweather-swift-sdk */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		BBFC12F529172B4E00955ABE /* Screens */ = {
@@ -444,7 +434,7 @@
 			);
 			name = Meteo;
 			packageProductDependencies = (
-				BBA5C986291AB1D30028B8EA /* OpenWeather */,
+				BB3C2CFA291CA2B600AB209E /* OpenWeather */,
 			);
 			productName = Meteo;
 			productReference = BB05468229171D5900B1C64E /* Meteo.app */;
@@ -497,6 +487,7 @@
 			);
 			mainGroup = BB05467929171D5900B1C64E;
 			packageReferences = (
+				BB3C2CF9291CA2B600AB209E /* XCRemoteSwiftPackageReference "openweather-swift-sdk" */,
 			);
 			productRefGroup = BB05468329171D5900B1C64E /* Products */;
 			projectDirPath = "";
@@ -861,9 +852,21 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		BB3C2CF9291CA2B600AB209E /* XCRemoteSwiftPackageReference "openweather-swift-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:friendlycashew/openweather-swift-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
-		BBA5C986291AB1D30028B8EA /* OpenWeather */ = {
+		BB3C2CFA291CA2B600AB209E /* OpenWeather */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = BB3C2CF9291CA2B600AB209E /* XCRemoteSwiftPackageReference "openweather-swift-sdk" */;
 			productName = OpenWeather;
 		};
 /* End XCSwiftPackageProductDependency section */

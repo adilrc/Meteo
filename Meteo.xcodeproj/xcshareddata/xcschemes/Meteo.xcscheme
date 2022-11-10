@@ -42,17 +42,6 @@
                ReferencedContainer = "container:Meteo.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference
-            skipped = "YES"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BB0546A129171D5A00B1C64E"
-               BuildableName = "MeteoUITests.xctest"
-               BlueprintName = "MeteoUITests"
-               ReferencedContainer = "container:Meteo.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
