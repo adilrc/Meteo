@@ -19,8 +19,8 @@ extension WeatherSummary {
             temperature: .init(
                 value: response.mainMetrics.temperature.rounded(),
                 unit: .celsius),
-            minTemp: response.mainMetrics.tempMin.flatMap { .init(value: $0, unit: .celsius) },
-            maxTemp: response.mainMetrics.tempMax.flatMap { .init(value: $0, unit: .celsius) },
+            minTemp: response.mainMetrics.tempMin.flatMap { .init(value: $0.rounded(), unit: .celsius) },
+            maxTemp: response.mainMetrics.tempMax.flatMap { .init(value: $0.rounded(), unit: .celsius) },
             description: response.summaries.first?.description,
             timeZone: response.timeZone,
             lastUpdate: response.date,
