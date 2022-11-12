@@ -17,7 +17,7 @@ extension WeatherSummary {
             weatherIconSystemName: response.summaries.first?.weatherIconSystemName
                 ?? placeholderSystemName,
             temperature: .init(
-                value: response.mainMetrics.temperature,
+                value: response.mainMetrics.temperature.rounded(),
                 unit: .celsius),
             minTemp: response.mainMetrics.tempMin.flatMap { .init(value: $0, unit: .celsius) },
             maxTemp: response.mainMetrics.tempMax.flatMap { .init(value: $0, unit: .celsius) },
