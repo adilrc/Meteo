@@ -5,6 +5,7 @@
 //  Created by Adil Erchouk on 11/6/22.
 //
 
+import Combine
 import SwiftUI
 import UIKit
 
@@ -87,13 +88,13 @@ final class ForecastCollectionViewController<ViewModel: WeatherContainerViewMode
         dataSource.apply(snapshot)
     }
 
-    private func loadContent() {
+    private func loadContent(force: Bool = false) {
         // Loading the actual forecast
         Task { @MainActor in
             guard
                 let forecast =
                     try await viewModel
-                    .reloadForecast(force: false, from: .now)
+                    .reloadForecast(force: force, from: .now)
             else { return }
 
             var snapshot = NSDiffableDataSourceSnapshot<Int, WeatherSummary?>()
@@ -104,6 +105,18 @@ final class ForecastCollectionViewController<ViewModel: WeatherContainerViewMode
         }
     }
 
+    private var subscriptions = Set<AnyCancellable>()
+    
+    private func subscribe(to viewModel: ViewModel) {
+        viewModel.weatherWrapperPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] wrapper in
+                guard let self else { return }
+                self.loadContent(force: true)
+            }
+            .store(in: &subscriptions)
+    }
+    
     override func loadView() {
         self.view = UIView()
         let collectionView = UICollectionView(
@@ -117,6 +130,7 @@ final class ForecastCollectionViewController<ViewModel: WeatherContainerViewMode
         setupCollectionView()
         registerCell()
         setupPlaceholders()
+        subscribe(to: viewModel)
     }
 
     override func viewDidAppear(_ animated: Bool) {
