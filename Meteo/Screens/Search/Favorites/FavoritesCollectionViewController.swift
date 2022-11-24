@@ -74,7 +74,7 @@ final class FavoritesCollectionViewController<ViewModel: SearchContainerViewMode
         return cell
     }
 
-    @objc private func refresh(_ sender: UIRefreshControl) {
+    @objc func refresh(_ sender: UIRefreshControl) {
         refresh(dataSource.snapshot().itemIdentifiers, force: true)
     }
 
