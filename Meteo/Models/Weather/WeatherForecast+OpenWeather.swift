@@ -32,12 +32,14 @@ extension WeatherForecast {
             // 1. Remove today's forecasts
             let isNotToday: Bool = !calendar.isDate($0.date, inSameDayAs: date)
 
-            // 2. Use only values between 10 a.m. and 13 p.m.
+            // 2. The API doesn't provides 5 summaries but 40 every 3 hours. So the last summary will be at now - 3 hours.
+            // To guarantee 5 summaries, we can target now minus 3 hours.
             // Assuming the API is correct, there should only be one value per day in this range.
-            let range = 10..<13
-            let isMidDay: Bool = range.contains(calendar.component(.hour, from: $0.date))
+            let targetHour = calendar.component(.hour, from: date) - 3
+            let range = (targetHour - 1) ..< (targetHour + 1)
+            let isSameAsTargetHour: Bool = range.contains(calendar.component(.hour, from: $0.date))
 
-            return isNotToday && isMidDay
+            return isNotToday && isSameAsTargetHour
         }
 
         return .init(weatherSummaries: summaries)

@@ -43,10 +43,10 @@ final class WeatherContainerViewModelTests: XCTestCase {
         let forecast = try await viewModel.reloadForecast(force: false, from: response.weatherSummaries.first?.date ?? .now)
 
         // Only 5 summaries should remains (5 days forecast)
-        XCTAssertEqual(forecast?.weatherSummaries.count, 4)
+        XCTAssertEqual(forecast?.weatherSummaries.count, 5)
 
         // All of the forecast should be in differente days
         let dates = forecast?.weatherSummaries.map(\.date) ?? []
-        XCTAssertEqual(Set(dates).count, 4)
+        XCTAssertEqual(Set(dates).count, 5)
     }
 }
