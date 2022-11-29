@@ -24,9 +24,9 @@ final class OpenWeatherAPITests: XCTestCase {
         XCTAssertEqual(summary.weatherIconSystemName, response.summaries.first?.weatherIconSystemName)
         XCTAssertEqual(summary.lastUpdate, response.date)
         XCTAssertEqual(summary.description, response.summaries.first?.description)
-        XCTAssertEqual(summary.maxTemp?.value, response.mainMetrics.tempMax)
-        XCTAssertEqual(summary.minTemp?.value, response.mainMetrics.tempMin)
-        XCTAssertEqual(summary.temperature.value, response.mainMetrics.temperature)
+        XCTAssertEqual(summary.maxTemp?.value, response.mainMetrics.tempMax?.rounded())
+        XCTAssertEqual(summary.minTemp?.value, response.mainMetrics.tempMin?.rounded())
+        XCTAssertEqual(summary.temperature.value, response.mainMetrics.temperature.rounded())
         XCTAssertEqual(summary.timeZone, response.timeZone)
     }
 
